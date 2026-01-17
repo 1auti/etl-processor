@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"425dedb0f71ac01a","type":"text","text":"```mermaid\nclassDiagram\n    class BaseExtractor {\n        <<abstract>>\n        +name: str\n        +supported_sources: List[str]\n        +extract() List[str]\n        +validate_source() bool\n        +get_source_info() Dict[str, Any]\n        +health_check() Dict[str, Any]\n    }\n    \n    class BaseIncrementalExtractor {\n        <<abstract>>\n        +get_checkpoint() Dict[str, Any]\n        +set_checkpoint(data) bool\n        +extract_since_checkpoint() List[str]\n    }\n    \n    class BaseStreamingExtractor {\n        <<abstract>>\n        +stream() Iterator[str]\n        +is_stream_complete() bool\n    }\n    \n    class BaseBatchExtractor {\n        <<abstract>>\n        +batch_size: int\n        +extract_batch(skip, limit) List[str]\n        +extract_all_batches() Iterator[List[str]]\n    }\n    \n    BaseExtractor <|-- BaseIncrementalExtractor\n    BaseExtractor <|-- BaseStreamingExtractor\n    BaseExtractor <|-- BaseBatchExtractor\n    \n    ```mermaid","x":-852,"y":-1083,"width":2262,"height":1114}
+	],
+	"edges":[]
+}

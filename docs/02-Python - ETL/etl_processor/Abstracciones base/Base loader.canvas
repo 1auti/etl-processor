@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"ffcdcc16e652dc4c","type":"text","text":"```mermaid\nclassDiagram\n    class BaseLoader {\n        <<abstract>>\n        +name: str\n        +supported_destinations: List[str]\n        +connect() OperationResult\n        +disconnect() None\n        +load_batch(records) int\n        +create_schema() OperationResult\n        +validate_destination() OperationResult\n        +health_check() Dict[str, Any]\n    }\n    \n    class BaseBatchLoader {\n        <<abstract>>\n        +batch_size: int\n        +max_retries: int\n        +load_large_dataset(records) Dict[str, Any]\n        +_load_with_retry(batch) int\n    }\n    \n    class BaseTransactionalLoader {\n        <<abstract>>\n        +begin_transaction() OperationResult\n        +commit() OperationResult\n        +rollback() OperationResult\n        +transaction_context() ContextManager\n    }\n    \n    BaseLoader <|-- BaseBatchLoader\n    BaseBatchLoader <|-- BaseTransactionalLoader\n    \n    ```mermaid","x":-373,"y":-1054,"width":702,"height":1200}
+	],
+	"edges":[]
+}

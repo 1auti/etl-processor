@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"234d3b95e42b276e","type":"text","text":"```mermaid\ngraph TB\n    subgraph \"Sistema ETL\"\n        A[Fuentes de Datos] --> B[Extractores]\n        B --> C[Datos Crudos]\n        C --> D[Parsers/Transformers]\n        D --> E[Datos Estructurados]\n        E --> F[Loaders]\n        F --> G[Destinos]\n        \n        H[Configuración] --> B\n        H --> D\n        H --> F\n        \n        I[Logging/Monitoreo] --> B\n        I --> D\n        I --> F\n        \n        J[Procesador ETL] --> B\n        J --> D\n        J --> F\n    end\n    \n    ```mermaid\n","x":-700,"y":-18,"width":1704,"height":514}
+	],
+	"edges":[]
+}

@@ -32,3 +32,10 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# Obsidian - archivos temporales y de workspace
+docs/.obsidian/workspace.json
+docs/.obsidian/workspace-mobile.json
+docs/.obsidian/workspace
+docs/.trash/
+.DS_Store
