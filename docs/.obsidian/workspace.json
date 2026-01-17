@@ -11,17 +11,10 @@
             "id": "b412b29d96ac03c3",
             "type": "leaf",
             "state": {
-              "type": "canvas",
-              "state": {
-                "file": "Utils/Sin título.canvas",
-                "viewState": {
-                  "x": 800.1255653005984,
-                  "y": -102.17376643916259,
-                  "zoom": -0.5
-                }
-              },
-              "icon": "lucide-layout-dashboard",
-              "title": "Sin título"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Nueva pestaña"
             }
           }
         ]
@@ -223,14 +216,9 @@
   },
   "active": "b412b29d96ac03c3",
   "lastOpenFiles": [
-    "Utils/Explicacion.md",
     "Utils/Sin título.canvas",
-    "01-Estructura de proyecto.md",
+    "Utils/Explicacion.md",
     "Utils",
-    "02-Features.md",
-    "04-Abstracciones base.md",
-    "03-Procesamiento-Logs.md",
-    "Bienvenido.md",
     "Artitectura Propuesta/Version simplificada.canvas",
     "Artitectura Propuesta/Flujo simplificado.canvas",
     "Artitectura Propuesta/Diagrama de arquitectura.canvas",
@@ -239,10 +227,16 @@
     "Abstracciones base/Flujo del procesador.canvas",
     "Abstracciones base/Flujo de datos ETL.canvas",
     "Abstracciones base/Estructura de archivos.md",
-    "Abstracciones base/Base parsear.canvas",
     "Abstracciones base/BaseETLProcessor.canvas",
+    "Abstracciones base/Base parsear.canvas",
     "Abstracciones base/Base loader.canvas",
+    "Abstracciones base/Base Extractor.canvas",
     "Abstracciones base/Artitectura general.canvas",
-    "Abstracciones base"
+    "Abstracciones base",
+    "04-Abstracciones base.md",
+    "03-Procesamiento-Logs.md",
+    "02-Features.md",
+    "01-Estructura de proyecto.md",
+    "Bienvenido.md"
   ]
 }
