@@ -1,0 +1,68 @@
+# Configuración para ambiente de desarrollo
+
+# Base de datos
+database:
+  host: localhost
+  port: 5432
+  name: traffic_analytics
+  user: etl_user
+  password: etl_password_2026
+  pool_size: 5
+  max_overflow: 10
+  pool_timeout: 30
+
+# Procesamiento
+processing:
+  batch_size: 1000
+  max_workers: 2
+  chunk_size: 5000
+  enable_parallel: false
+  retry_attempts: 3
+  retry_backoff: 2
+
+# Archivos
+files:
+  input_dir: data/raw
+  processed_dir: data/processed
+  failed_dir: data/failed
+  checkpoint_dir: data/checkpoints
+  encoding: utf-8
+
+# Logging
+logging:
+  level: DEBUG
+  json_logs: false
+  log_file: logs/etl_dev.log
+  max_file_size_mb: 100
+  backup_count: 5
+
+# Validación
+validation:
+  strict_mode: false
+  skip_invalid_ips: true
+  skip_suspicious_urls: false
+  max_url_length: 2000
+
+# Enriquecimiento
+enrichment:
+  enable_geoip: false
+  enable_user_agent: true
+  enable_threat_intel: false
+
+# Métricas
+metrics:
+  enable_prometheus: false
+  prometheus_port: 9090
+  collection_interval_seconds: 60
+
+# Alertas
+alerting:
+  enable_email: false
+  enable_slack: false
+  error_threshold: 10
+
+# Features flags
+features:
+  enable_deduplication: true
+  enable_partitioning: false
+  enable_compression: false

@@ -1,0 +1,68 @@
+# Configuración para ambiente de producción
+
+# Base de datos
+database:
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+  name: ${DB_NAME}
+  user: ${DB_USER}
+  password: ${DB_PASSWORD}
+  pool_size: 20
+  max_overflow: 40
+  pool_timeout: 60
+
+# Procesamiento
+processing:
+  batch_size: 5000
+  max_workers: 8
+  chunk_size: 50000
+  enable_parallel: true
+  retry_attempts: 5
+  retry_backoff: 3
+
+# Archivos
+files:
+  input_dir: /var/etl/input
+  processed_dir: /var/etl/processed
+  failed_dir: /var/etl/failed
+  checkpoint_dir: /var/etl/checkpoints
+  encoding: utf-8
+
+# Logging
+logging:
+  level: INFO
+  json_logs: true
+  log_file: /var/log/etl/etl.log
+  max_file_size_mb: 500
+  backup_count: 30
+
+# Validación
+validation:
+  strict_mode: true
+  skip_invalid_ips: false
+  skip_suspicious_urls: true
+  max_url_length: 2000
+
+# Enriquecimiento
+enrichment:
+  enable_geoip: true
+  enable_user_agent: true
+  enable_threat_intel: true
+
+# Métricas
+metrics:
+  enable_prometheus: true
+  prometheus_port: 9090
+  collection_interval_seconds: 30
+
+# Alertas
+alerting:
+  enable_email: true
+  enable_slack: true
+  error_threshold: 100
+
+# Features flags
+features:
+  enable_deduplication: true
+  enable_partitioning: true
+  enable_compression: true

@@ -1,6 +1,6 @@
 
 from typing import Optional
-from config import Config
+from .config import Config
 
 
 _config_instance: Optional[Config] = None
