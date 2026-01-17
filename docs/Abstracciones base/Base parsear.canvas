@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"81807d8948294bba","type":"text","text":"```mermaid\nclassDiagram\n    class BaseParser {\n        <<abstract>>\n        +name: str\n        +supported_formats: List[str]\n        +parse_line(line: str) LogRecord\n        +validate_record(record) bool\n        +parse_batch(lines) LogRecordBatch\n        +get_stats() ParserStats\n    }\n    \n    class LogRecord {\n        <<type-alias>>\n        Dict[str, Any]\n    }\n    \n    class ParserStats {\n        +total_lines: int\n        +parsed_successfully: int\n        +parse_errors: int\n        +validation_errors: int\n    }\n    ```mermaid","x":-135,"y":-541,"width":292,"height":131}
+	],
+	"edges":[]
+}

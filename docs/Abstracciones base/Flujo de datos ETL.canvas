@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"a65cfcbdaf24520e","type":"text","text":"```mermaid\nflowchart TD\n    A[📁 Fuente de Datos] -->|Extracción| B[Extractor]\n    B --> C[🔄 Datos Crudos<br/>Lista de strings]\n    C -->|Transformación| D[Parser]\n    D --> E[📊 Datos Estructurados<br/>Lista de dicts]\n    E -->|Carga| F[Loader]\n    F --> G[🏁 Destino Final]\n    \n    H[🎛️ Procesador ETL] --> B\n    H --> D\n    H --> F\n    H --> I[📈 Métricas/Estadísticas]\n    \n    style A fill:#e1f5fe\n    style G fill:#e8f5e8\n    style H fill:#f3e5f5\n    \n    ```mermaid","x":-1114,"y":-573,"width":1506,"height":876}
+	],
+	"edges":[]
+}

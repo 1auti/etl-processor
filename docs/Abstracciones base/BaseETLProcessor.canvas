@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"7253b86277bff799","type":"text","text":"```mermaid\nclassDiagram\n    class BaseETLProcessor {\n        <<abstract>>\n        +name: str\n        +version: str\n        +description: str\n        +stats: ProcessStats\n        +initialize() bool\n        +cleanup() None\n        +extract() List[str]\n        +transform(data) LogRecordBatch\n        +load(records) int\n        +run() ProcessingResult\n        +run_with_context() ProcessingResult\n        +get_stats() ProcessStats\n        +get_summary() Dict[str, Any]\n        +health_check() Dict[str, Any]\n    }\n    \n    class BaseParallelETLProcessor {\n        <<abstract>>\n        +get_parallel_workers() int\n        +split_data_for_parallel(data) List[List[str]]\n        +merge_results(results) LogRecordBatch\n    }\n    \n    class BaseIncrementalETLProcessor {\n        <<abstract>>\n        +get_last_processed_checkpoint() Dict[str, Any]\n        +save_checkpoint(data) bool\n        +extract_since_checkpoint(checkpoint) List[str]\n    }\n    \n    BaseETLProcessor <|-- BaseParallelETLProcessor\n    BaseETLProcessor <|-- BaseIncrementalETLProcessor\n    \n    ```mermaid","x":-383,"y":-664,"width":512,"height":714}
+	],
+	"edges":[]
+}

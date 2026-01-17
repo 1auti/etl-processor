@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"87e8f609ad8a0947","x":0,"y":-580,"width":1180,"height":880,"type":"text","text":"```mermaid\nsequenceDiagram\n    participant P as Procesador ETL\n    participant R as Retry Decorator\n    participant V as Validator\n    participant M as Metrics Collector\n    participant D as Destino\n\n    P->>V: validate_input(data)\n    V-->>P: ✅ Datos válidos\n    \n    P->>R: @retry connect_to_destination()\n    R->>D: 🔄 Intento 1 - Conexión\n    D-->>R: ❌ Error temporal\n    R->>R: ⏸️ Espera exponential backoff\n    R->>D: 🔄 Intento 2 - Conexión\n    D-->>R: ✅ Conexión exitosa\n    R-->>P: Retorna conexión\n    \n    P->>M: record_start(\"processing\")\n    P->>D: 🚀 Procesa datos\n    P->>M: record_end(\"processing\")\n    \n    M->>P: 📊 Métricas de ejecución\n```\n"}
+	],
+	"edges":[]
+}

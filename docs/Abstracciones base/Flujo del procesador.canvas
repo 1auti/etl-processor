@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"29905a407fd7f7d0","type":"text","text":"```mermaid\nstateDiagram-v2\n    [*] --> Inicializado: initialize()\n    Inicializado --> Extrayendo: run()\n    \n    state \"Procesamiento ETL\" as ETL {\n        Extrayendo --> Transformando: extract() completado\n        Transformando --> Cargando: transform() completado\n        Cargando --> Completado: load() completado\n    }\n    \n    Completado --> [*]: cleanup()\n    \n    Extrayendo --> Error: Exception\n    Transformando --> Error: Exception\n    Cargando --> Error: Exception\n    \n    Error --> [*]: cleanup()\n    \n    ```mermaid","x":-422,"y":-518,"width":784,"height":853}
+	],
+	"edges":[]
+}

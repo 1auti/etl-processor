@@ -1,0 +1,59 @@
+# Configuración para testing
+
+database:
+  host: localhost
+  port: 5432
+  name: traffic_analytics_test
+  user: etl_user
+  password: etl_password_2026
+  pool_size: 2
+  max_overflow: 5
+  pool_timeout: 10
+
+processing:
+  batch_size: 100
+  max_workers: 1
+  chunk_size: 500
+  enable_parallel: false
+  retry_attempts: 1
+  retry_backoff: 1
+
+files:
+  input_dir: tests/fixtures/input
+  processed_dir: tests/fixtures/processed
+  failed_dir: tests/fixtures/failed
+  checkpoint_dir: tests/fixtures/checkpoints
+  encoding: utf-8
+
+logging:
+  level: DEBUG
+  json_logs: false
+  log_file: tests/logs/test.log
+  max_file_size_mb: 10
+  backup_count: 2
+
+validation:
+  strict_mode: true
+  skip_invalid_ips: false
+  skip_suspicious_urls: false
+  max_url_length: 2000
+
+enrichment:
+  enable_geoip: false
+  enable_user_agent: false
+  enable_threat_intel: false
+
+metrics:
+  enable_prometheus: false
+  prometheus_port: 9091
+  collection_interval_seconds: 300
+
+alerting:
+  enable_email: false
+  enable_slack: false
+  error_threshold: 1
+
+features:
+  enable_deduplication: true
+  enable_partitioning: false
+  enable_compression: false
