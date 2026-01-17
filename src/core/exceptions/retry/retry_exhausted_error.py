@@ -1,7 +1,7 @@
 from core.exceptions.etl_exception import EtlException
 
 
-class RetryExhaustedError(EtlException()):
+class RetryExhaustedError(EtlException):
     """Se agotaron todos los reintentos"""
 
     def __init__(self, message:str, attemps:int , last_error:Exception):
