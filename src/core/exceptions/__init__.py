@@ -71,6 +71,16 @@ from .validation import (
     ValidationError
 )
 
+from .metrics import (
+    MetricsAggregationError,
+    MetricsBufferError,
+    MetricsConfigurationError,
+    MetricsConnectionError,
+    MetricsError,
+    MetricsStorageError,
+    MetricsValidationError
+)
+
 # Re-export everything
 __all__ = [
 
@@ -129,9 +139,18 @@ __all__ = [
     'invalidUrlError',
     'SuspiciousPatternError',
     'ValidationError'
+
+    # Metrics exceptions
+    'MetricsAggregationError',
+    'MetricsBufferError',
+    'MetricsConfigurationError',
+    'MetricsConnectionError',
+    'MetricsError',
+    'MetricsStorageError',
+    'MetricsValidationError'
 ]
 
-# Optional: grupos de excepciones para importación selectiva
+# Grupos de excepciones para importación selectiva
 CHECKPOINT_EXCEPTIONS = [
     'CheckpointCorruptedError',
     'CheckpointError',
