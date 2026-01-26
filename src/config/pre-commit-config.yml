@@ -1,0 +1,101 @@
+# Configuración de pre-commit hooks
+# Para instalar: pip install pre-commit && pre-commit install
+
+repos:
+  # Hooks generales de pre-commit
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Verifica que no haya archivos grandes
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+
+      # Verifica formato de YAML
+      - id: check-yaml
+
+      # Verifica formato de JSON
+      - id: check-json
+
+      # Verifica que archivos Python tengan sintaxis válida
+      - id: check-ast
+
+      # Previene commits a main/master
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+
+      # Elimina espacios en blanco al final de líneas
+      - id: trailing-whitespace
+
+      # Asegura que archivos terminen con newline
+      - id: end-of-file-fixer
+
+      # Verifica conflictos de merge
+      - id: check-merge-conflict
+
+      # Ordena imports (requiere requirements.txt)
+      - id: check-docstring-first
+
+  # Formateo de código con Black
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3.10
+        args: ['--line-length=100']
+
+  # Ordenamiento de imports con isort
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Linting con flake8
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: [
+          '--max-line-length=100',
+          '--extend-ignore=E203,E501,W503',  # Ignora conflictos con Black
+          '--max-complexity=10'
+        ]
+
+  # Type checking con mypy (opcional pero recomendado)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+        args: ['--ignore-missing-imports']
+
+  # Detecta secretos/credenciales accidentales
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # Tests automáticos antes de commit
+  - repo: local
+    hooks:
+      # Ejecuta tests unitarios
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest
+        args: ['-v', '--tb=short', '-m', 'not slow']
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+      # Verifica coverage mínimo
+      - id: coverage-check
+        name: coverage-check
+        entry: pytest
+        args: ['--cov=src', '--cov-fail-under=70']
+        language: system
+        pass_filenames: false
+        always_run: false
+        stages: [push]

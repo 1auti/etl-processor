@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "token": "",
+  "repos": [
+    {
+      "owner": "1auti",
+      "repo": "https://github.com/1auti/etl-processor",
+      "code": "1auti|https://github.com/1auti/etl-processor"
+    }
+  ]
+}

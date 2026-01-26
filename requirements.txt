@@ -1,9 +1,16 @@
-# Core dependencies
-psycopg2-binary==2.9.9
+# Production dependencies
 python-dotenv==1.0.0
 python-dateutil==2.8.2
+pydantic==2.6.4
+jsonschema==4.26.0
 
-# Development tools
+# Database (ELEGIR SOLO UNO):
+# Para desarrollo/pruebas:
+psycopg2-binary==2.9.9
+# Para producción (requiere compilación):
+# psycopg2==2.9.9
+
+# Development dependencies (separar en requirements-dev.txt)
 flake8==6.1.0
 autopep8==2.0.4
 pytest==7.4.3
