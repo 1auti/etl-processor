@@ -1,7 +1,7 @@
 
 import json
 
-from core.config.singleton_config import get_config
+from src.core.config.singleton_config import get_config
 
 def test_config_example_usage():
     """Test que replica el ejemplo pero con verificaciones"""

@@ -1,6 +1,6 @@
-from config import Config
+from src.core.exceptions.configuration.configuration_error import ConfigurationError
 
 
-class InvalidConfigError(Config):
+class InvalidConfigError(ConfigurationError):
     """El valor de la configuracion es invalida"""
     pass

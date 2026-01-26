@@ -4,7 +4,7 @@ import logging
 import sys
 import structlog
 from structlog.stdlib import LoggerFactory
-from core.logger.logger_procesadores import add_caller_info, add_log_level, add_timestamp
+from src.core.logger.logger_procesadores import add_caller_info, add_log_level, add_timestamp
 
 
 

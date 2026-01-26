@@ -1,4 +1,4 @@
-from core.exceptions.enrichment.enrichment_error import EnrichmentError
+from src.core.exceptions.enrichment.enrichment_error import EnrichmentError
 
 
 class UserAgentParseError(EnrichmentError):

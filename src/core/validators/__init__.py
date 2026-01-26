@@ -68,7 +68,14 @@ from .log_validators import (
 
 from .config_validators import (
     validate_config_dict,
-    validate_env_vars
+    validate_env_vars,
+    validate_database_config,
+    validate_full_config,
+    validate_file_paths_config,
+    validate_logging_config,
+    validate_metrics_config,
+    validate_processing_config,
+    _get_nested_value
 )
 
 from .composite_validators import (
@@ -129,6 +136,13 @@ __all__ = [
     # Config
     'validate_config_dict',
     'validate_env_vars',
+    'validate_database_config',
+    'validate_full_config',
+    'validate_file_paths_config',
+    'validate_logging_config',
+    'validate_metrics_config',
+    'validate_processing_config',
+    '_get_nested_value'
 
     # Composite
     'LogRecordValidator',

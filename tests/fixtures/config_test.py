@@ -1,5 +1,5 @@
 
-from core.config.singleton_config import get_config
+from src.core.config.singleton_config import get_config
 import pytest
 
 @pytest.fixture
@@ -10,7 +10,7 @@ def dev_config():
 @pytest.fixture
 def prod_config():
     """Fixture: Configuración de producción"""
-    return get_config(env='prod')
+    return get_config(env='prod',reload=True)
 
 # tests/test_config_fixtures.py
 class TestConfigWithFixtures:

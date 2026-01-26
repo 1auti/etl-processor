@@ -1,4 +1,4 @@
-from core.exceptions.configuration.configuration_error import ConfigurationError
+from src.core.exceptions.configuration.configuration_error import ConfigurationError
 
 
 class MissingConfigError(ConfigurationError):

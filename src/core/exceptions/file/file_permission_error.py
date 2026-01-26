@@ -1,6 +1,6 @@
 
 
-from core.exceptions.file.file_error import FileError
+from src.core.exceptions.file.file_error import FileError
 
 
 class FilePermissionError(FileError):

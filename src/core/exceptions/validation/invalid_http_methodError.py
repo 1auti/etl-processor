@@ -1,6 +1,6 @@
-from core.exceptions.validation.validation_error import ValidationError
+from src.core.exceptions.validation.validation_error import ValidationError
 
 
-class InvalidHttpMethodError(ValidationError()):
+class InvalidHttpMethodError(ValidationError):
     """Metodo HTTP no valido"""
     pass

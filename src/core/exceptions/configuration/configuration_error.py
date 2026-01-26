@@ -1,4 +1,4 @@
-from core.exceptions.etl_exception import EtlException
+from src.core.exceptions.etl_exception import EtlException
 
 
 class ConfigurationError(EtlException):

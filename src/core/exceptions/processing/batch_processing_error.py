@@ -1,4 +1,4 @@
-from core.exceptions.processing.processing_error import ProcessingError
+from src.core.exceptions.processing.processing_error import ProcessingError
 
 
 class BatchProcessingError(ProcessingError):

@@ -43,17 +43,13 @@ class Config:
 
         # Directorio de configuración
         if config_dir is None:
-            # Buscar carpeta config desde la raíz del proyecto
-            current = Path(__file__).parent
-            while current.parent != current:
-                config_dir = current / 'config'
-                if config_dir.exists():
-                    break
-                current = current.parent
-            else:
-                config_dir = Path('config')
 
-        self.config_dir = Path(config_dir)
+            config_dir = Path("src/config")
+        elif isinstance(config_dir,str):
+
+            config_dir = Path(config_dir)
+
+        self.config_dir = config_dir.resolve() # Convertimos en ruta absoluta
 
         # Configuración cargada
         self._config: Dict[str, Any] = {}
@@ -66,7 +62,7 @@ class Config:
 
     def _load_config(self):
         """Carga configuración desde archivo YAML."""
-        config_file = self.config_dir / f"{self.env}.yaml"
+        config_file = self.config_dir / f"{self.env}.yml"
 
         if not config_file.exists():
             raise ConfigurationError(
