@@ -3,14 +3,12 @@ Validadores para configuración del sistema ETL.
 Valida archivos de configuración YAML y variables de entorno.
 """
 
-from typing import Dict, Any, List, Optional, Set
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Set
 
 
 def validate_config_dict(
-    config: Dict[str, Any],
-    required_keys: Optional[List[str]] = None,
-    strict: bool = False
+    config: Dict[str, Any], required_keys: Optional[List[str]] = None, strict: bool = False
 ) -> bool:
     """
     Valida un diccionario de configuración.
@@ -74,7 +72,7 @@ def validate_database_config(config: Dict[str, Any]) -> bool:
         >>> validate_database_config(db_config)
         True
     """
-    required_keys = ['host', 'port', 'name', 'user']
+    required_keys = ["host", "port", "name", "user"]
 
     for key in required_keys:
         if key not in config:
@@ -84,19 +82,19 @@ def validate_database_config(config: Dict[str, Any]) -> bool:
             raise ValueError(f"Configuración de BD '{key}' no puede estar vacía")
 
     # Validar tipos específicos
-    if not isinstance(config['port'], int):
+    if not isinstance(config["port"], int):
         raise ValueError(f"Puerto debe ser entero, recibido: {type(config['port'])}")
 
-    if not (1 <= config['port'] <= 65535):
+    if not (1 <= config["port"] <= 65535):
         raise ValueError(f"Puerto inválido: {config['port']} (debe estar entre 1-65535)")
 
     # Validar campos opcionales si existen
-    if 'pool_size' in config:
-        if not isinstance(config['pool_size'], int) or config['pool_size'] < 1:
+    if "pool_size" in config:
+        if not isinstance(config["pool_size"], int) or config["pool_size"] < 1:
             raise ValueError(f"pool_size inválido: {config.get('pool_size')}")
 
-    if 'timeout' in config:
-        if not isinstance(config['timeout'], (int, float)) or config['timeout'] <= 0:
+    if "timeout" in config:
+        if not isinstance(config["timeout"], (int, float)) or config["timeout"] <= 0:
             raise ValueError(f"timeout inválido: {config.get('timeout')}")
 
     return True
@@ -125,8 +123,8 @@ def validate_processing_config(config: Dict[str, Any]) -> bool:
         True
     """
     # Validar batch_size
-    if 'batch_size' in config:
-        batch_size = config['batch_size']
+    if "batch_size" in config:
+        batch_size = config["batch_size"]
         if not isinstance(batch_size, int) or batch_size < 1:
             raise ValueError(f"batch_size debe ser entero positivo: {batch_size}")
 
@@ -134,8 +132,8 @@ def validate_processing_config(config: Dict[str, Any]) -> bool:
             raise ValueError(f"batch_size muy grande: {batch_size} (máximo recomendado: 100000)")
 
     # Validar max_workers
-    if 'max_workers' in config:
-        max_workers = config['max_workers']
+    if "max_workers" in config:
+        max_workers = config["max_workers"]
         if not isinstance(max_workers, int) or max_workers < 1:
             raise ValueError(f"max_workers debe ser entero positivo: {max_workers}")
 
@@ -143,14 +141,14 @@ def validate_processing_config(config: Dict[str, Any]) -> bool:
             raise ValueError(f"max_workers muy grande: {max_workers} (máximo recomendado: 32)")
 
     # Validar chunk_size
-    if 'chunk_size' in config:
-        chunk_size = config['chunk_size']
+    if "chunk_size" in config:
+        chunk_size = config["chunk_size"]
         if not isinstance(chunk_size, int) or chunk_size < 1:
             raise ValueError(f"chunk_size debe ser entero positivo: {chunk_size}")
 
     # Validar retry_attempts
-    if 'retry_attempts' in config:
-        retry = config['retry_attempts']
+    if "retry_attempts" in config:
+        retry = config["retry_attempts"]
         if not isinstance(retry, int) or retry < 0:
             raise ValueError(f"retry_attempts debe ser entero no negativo: {retry}")
 
@@ -173,18 +171,18 @@ def validate_logging_config(config: Dict[str, Any]) -> bool:
     Raises:
         ValueError: Si la configuración es inválida
     """
-    valid_levels = {'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'}
+    valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
 
-    if 'level' in config:
-        level = config['level'].upper() if isinstance(config['level'], str) else config['level']
+    if "level" in config:
+        level = config["level"].upper() if isinstance(config["level"], str) else config["level"]
         if level not in valid_levels:
             raise ValueError(
                 f"Nivel de logging inválido: '{config['level']}'. "
                 f"Valores válidos: {valid_levels}"
             )
 
-    if 'log_file' in config:
-        log_file = Path(config['log_file'])
+    if "log_file" in config:
+        log_file = Path(config["log_file"])
         # Validar que el directorio padre existe o se puede crear
         if not log_file.parent.exists():
             try:
@@ -192,13 +190,13 @@ def validate_logging_config(config: Dict[str, Any]) -> bool:
             except Exception as e:
                 raise ValueError(f"No se puede crear directorio de logs: {e}")
 
-    if 'max_file_size_mb' in config:
-        size = config['max_file_size_mb']
+    if "max_file_size_mb" in config:
+        size = config["max_file_size_mb"]
         if not isinstance(size, (int, float)) or size <= 0:
             raise ValueError(f"max_file_size_mb inválido: {size}")
 
-    if 'backup_count' in config:
-        count = config['backup_count']
+    if "backup_count" in config:
+        count = config["backup_count"]
         if not isinstance(count, int) or count < 0:
             raise ValueError(f"backup_count inválido: {count}")
 
@@ -218,7 +216,7 @@ def validate_file_paths_config(config: Dict[str, Any]) -> bool:
     Raises:
         ValueError: Si la configuración es inválida
     """
-    path_keys = ['input_dir', 'output_dir', 'processed_dir', 'failed_dir', 'checkpoint_dir']
+    path_keys = ["input_dir", "output_dir", "processed_dir", "failed_dir", "checkpoint_dir"]
 
     for key in path_keys:
         if key in config:
@@ -235,7 +233,7 @@ def validate_file_paths_config(config: Dict[str, Any]) -> bool:
             # Validar que no sea ruta absoluta peligrosa
             if path.is_absolute():
                 # Permitir rutas absolutas pero advertir sobre rutas de sistema
-                dangerous_paths = ['/bin', '/usr', '/etc', '/sys', '/proc']
+                dangerous_paths = ["/bin", "/usr", "/etc", "/sys", "/proc"]
                 if any(str(path).startswith(dp) for dp in dangerous_paths):
                     raise ValueError(f"{key} apunta a directorio de sistema: {path}")
 
@@ -243,9 +241,7 @@ def validate_file_paths_config(config: Dict[str, Any]) -> bool:
 
 
 def validate_env_vars(
-    env_vars: Dict[str, str],
-    required_vars: Optional[Set[str]] = None,
-    prefix: Optional[str] = None
+    env_vars: Dict[str, str], required_vars: Optional[Set[str]] = None, prefix: Optional[str] = None
 ) -> bool:
     """
     Valida variables de entorno.
@@ -279,9 +275,7 @@ def validate_env_vars(
     if prefix:
         for key in env_vars.keys():
             if not key.startswith(prefix):
-                raise ValueError(
-                    f"Variable '{key}' no tiene el prefijo esperado '{prefix}'"
-                )
+                raise ValueError(f"Variable '{key}' no tiene el prefijo esperado '{prefix}'")
 
     # Validar que no haya valores vacíos en variables requeridas
     if required_vars:
@@ -305,8 +299,8 @@ def validate_metrics_config(config: Dict[str, Any]) -> bool:
     Raises:
         ValueError: Si la configuración es inválida
     """
-    if 'collection_interval_seconds' in config:
-        interval = config['collection_interval_seconds']
+    if "collection_interval_seconds" in config:
+        interval = config["collection_interval_seconds"]
         if not isinstance(interval, (int, float)) or interval <= 0:
             raise ValueError(f"collection_interval_seconds inválido: {interval}")
 
@@ -316,18 +310,14 @@ def validate_metrics_config(config: Dict[str, Any]) -> bool:
                 "(mínimo recomendado: 1 segundo)"
             )
 
-    if 'enable_prometheus' in config:
-        if not isinstance(config['enable_prometheus'], bool):
-            raise ValueError(
-                f"enable_prometheus debe ser booleano: {config['enable_prometheus']}"
-            )
+    if "enable_prometheus" in config:
+        if not isinstance(config["enable_prometheus"], bool):
+            raise ValueError(f"enable_prometheus debe ser booleano: {config['enable_prometheus']}")
 
-    if 'prometheus_port' in config:
-        port = config['prometheus_port']
+    if "prometheus_port" in config:
+        port = config["prometheus_port"]
         if not isinstance(port, int) or not (1024 <= port <= 65535):
-            raise ValueError(
-                f"prometheus_port inválido: {port} (debe estar entre 1024-65535)"
-            )
+            raise ValueError(f"prometheus_port inválido: {port} (debe estar entre 1024-65535)")
 
     return True
 
@@ -355,49 +345,50 @@ def validate_full_config(config: Dict[str, Any]) -> Dict[str, bool]:
     results = {}
 
     # Validar sección database
-    if 'database' in config:
+    if "database" in config:
         try:
-            results['database'] = validate_database_config(config['database'])
+            results["database"] = validate_database_config(config["database"])
         except ValueError as e:
-            results['database'] = False
-            results['database_error'] = str(e)
+            results["database"] = False
+            results["database_error"] = str(e)
 
     # Validar sección processing
-    if 'processing' in config:
+    if "processing" in config:
         try:
-            results['processing'] = validate_processing_config(config['processing'])
+            results["processing"] = validate_processing_config(config["processing"])
         except ValueError as e:
-            results['processing'] = False
-            results['processing_error'] = str(e)
+            results["processing"] = False
+            results["processing_error"] = str(e)
 
     # Validar sección logging
-    if 'logging' in config:
+    if "logging" in config:
         try:
-            results['logging'] = validate_logging_config(config['logging'])
+            results["logging"] = validate_logging_config(config["logging"])
         except ValueError as e:
-            results['logging'] = False
-            results['logging_error'] = str(e)
+            results["logging"] = False
+            results["logging_error"] = str(e)
 
     # Validar sección files
-    if 'files' in config:
+    if "files" in config:
         try:
-            results['files'] = validate_file_paths_config(config['files'])
+            results["files"] = validate_file_paths_config(config["files"])
         except ValueError as e:
-            results['files'] = False
-            results['files_error'] = str(e)
+            results["files"] = False
+            results["files_error"] = str(e)
 
     # Validar sección metrics
-    if 'metrics' in config:
+    if "metrics" in config:
         try:
-            results['metrics'] = validate_metrics_config(config['metrics'])
+            results["metrics"] = validate_metrics_config(config["metrics"])
         except ValueError as e:
-            results['metrics'] = False
-            results['metrics_error'] = str(e)
+            results["metrics"] = False
+            results["metrics_error"] = str(e)
 
     return results
 
 
 # ========== FUNCIONES AUXILIARES PRIVADAS ==========
+
 
 def _has_nested_key(data: Dict[str, Any], key_path: str) -> bool:
     """
@@ -410,7 +401,7 @@ def _has_nested_key(data: Dict[str, Any], key_path: str) -> bool:
     Returns:
         bool: True si la clave existe
     """
-    keys = key_path.split('.')
+    keys = key_path.split(".")
     current = data
 
     for key in keys:
@@ -432,7 +423,7 @@ def _get_nested_value(data: Dict[str, Any], key_path: str) -> Any:
     Returns:
         Any: Valor encontrado o None
     """
-    keys = key_path.split('.')
+    keys = key_path.split(".")
     current = data
 
     for key in keys:

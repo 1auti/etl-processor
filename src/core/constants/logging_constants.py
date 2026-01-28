@@ -1,10 +1,11 @@
-
 class LoggingConstants:
     """Constantes para el sistema de logging."""
 
     # Formatos de log
     DEFAULT_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    DETAILED_LOG_FORMAT = "%(asctime)s - %(name)s - [%(levelname)s] - %(filename)s:%(lineno)d - %(message)s"
+    DETAILED_LOG_FORMAT = (
+        "%(asctime)s - %(name)s - [%(levelname)s] - %(filename)s:%(lineno)d - %(message)s"
+    )
     SIMPLE_LOG_FORMAT = "%(levelname)s - %(message)s"
 
     # Formato de fecha

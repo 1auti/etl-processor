@@ -1,6 +1,5 @@
-from typing import Dict, Any
-import time
-from functools import wraps
+from typing import Any, Dict
+
 
 class RetryStats:
     """Clase para registrar estadísticas de reintentos."""
@@ -26,10 +25,10 @@ class RetryStats:
     def get_summary(self) -> Dict[str, Any]:
         """Obtiene un resumen de las estadísticas."""
         return {
-            'total_attempts': self.total_attempts,
-            'successful_attempts': self.successful_attempts,
-            'failed_attempts': self.failed_attempts,
-            'success_rate': self.successful_attempts / max(1, self.total_attempts),
-            'total_wait_time_seconds': self.total_wait_time,
-            'exceptions': self.exceptions
+            "total_attempts": self.total_attempts,
+            "successful_attempts": self.successful_attempts,
+            "failed_attempts": self.failed_attempts,
+            "success_rate": self.successful_attempts / max(1, self.total_attempts),
+            "total_wait_time_seconds": self.total_wait_time,
+            "exceptions": self.exceptions,
         }

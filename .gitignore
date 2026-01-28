@@ -39,3 +39,4 @@ docs/.obsidian/workspace-mobile.json
 docs/.obsidian/workspace
 docs/.trash/
 .DS_Store
+.secrets.baseline

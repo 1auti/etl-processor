@@ -3,4 +3,3 @@ from src.core.exceptions.configuration.configuration_error import ConfigurationE
 
 class InvalidConfigError(ConfigurationError):
     """El valor de la configuracion es invalida"""
-    pass

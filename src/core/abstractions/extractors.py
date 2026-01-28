@@ -7,9 +7,8 @@ el procesamiento posterior en el pipeline ETL.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional, Iterator
 from contextlib import AbstractContextManager
-from pathlib import Path
+from typing import Any, Dict, Iterator, List, Optional
 
 from .types import ExtractionResult
 
@@ -33,7 +32,6 @@ class BaseExtractor(ABC, AbstractContextManager):
             str: Nombre del extractor
             Ejemplo: 'file_extractor', 's3_extractor', 'api_extractor'
         """
-        pass
 
     @property
     @abstractmethod
@@ -45,7 +43,6 @@ class BaseExtractor(ABC, AbstractContextManager):
             List[str]: Tipos de fuentes soportadas
             Ejemplo: ['local_file', 's3', 'http_api', 'ftp', 'database']
         """
-        pass
 
     @abstractmethod
     def extract(self) -> List[str]:
@@ -59,7 +56,6 @@ class BaseExtractor(ABC, AbstractContextManager):
             ExtractionError: Si ocurre un error durante la extracción
             SourceNotFoundError: Si la fuente no es accesible
         """
-        pass
 
     @abstractmethod
     def validate_source(self) -> bool:
@@ -72,7 +68,6 @@ class BaseExtractor(ABC, AbstractContextManager):
         Raises:
             ValidationError: Si la validación falla
         """
-        pass
 
     @abstractmethod
     def get_source_info(self) -> Dict[str, Any]:
@@ -83,7 +78,6 @@ class BaseExtractor(ABC, AbstractContextManager):
             Dict[str, Any]: Diccionario con información de la fuente
             Ejemplo: {'path': '/ruta/archivo.log', 'size': 1024, 'encoding': 'utf-8'}
         """
-        pass
 
     def extract_with_metadata(self) -> ExtractionResult:
         """
@@ -96,11 +90,7 @@ class BaseExtractor(ABC, AbstractContextManager):
         raw_lines = self.extract()
         errors = []
 
-        return ExtractionResult(
-            raw_lines=raw_lines,
-            source_info=source_info,
-            errors=errors
-        )
+        return ExtractionResult(raw_lines=raw_lines, source_info=source_info, errors=errors)
 
     def get_size_estimate(self) -> Optional[int]:
         """
@@ -110,7 +100,7 @@ class BaseExtractor(ABC, AbstractContextManager):
             Optional[int]: Tamaño estimado en bytes, o None si no se puede determinar
         """
         source_info = self.get_source_info()
-        return source_info.get('size')
+        return source_info.get("size")
 
     def health_check(self) -> Dict[str, Any]:
         """
@@ -124,18 +114,18 @@ class BaseExtractor(ABC, AbstractContextManager):
             source_info = self.get_source_info()
 
             return {
-                'extractor': self.name,
-                'source_valid': source_valid,
-                'source_info': source_info,
-                'supported_sources': self.supported_sources,
-                'status': 'healthy' if source_valid else 'unhealthy'
+                "extractor": self.name,
+                "source_valid": source_valid,
+                "source_info": source_info,
+                "supported_sources": self.supported_sources,
+                "status": "healthy" if source_valid else "unhealthy",
             }
         except Exception as e:
             return {
-                'extractor': self.name,
-                'source_valid': False,
-                'error': str(e),
-                'status': 'error'
+                "extractor": self.name,
+                "source_valid": False,
+                "error": str(e),
+                "status": "error",
             }
 
 
@@ -155,7 +145,6 @@ class BaseIncrementalExtractor(BaseExtractor):
         Returns:
             Optional[Dict[str, Any]]: Checkpoint actual o None si es la primera ejecución
         """
-        pass
 
     @abstractmethod
     def set_checkpoint(self, checkpoint_data: Dict[str, Any]) -> bool:
@@ -168,7 +157,6 @@ class BaseIncrementalExtractor(BaseExtractor):
         Returns:
             bool: True si el checkpoint se guardó exitosamente
         """
-        pass
 
     @abstractmethod
     def extract_since_checkpoint(self, checkpoint: Optional[Dict[str, Any]] = None) -> List[str]:
@@ -181,7 +169,6 @@ class BaseIncrementalExtractor(BaseExtractor):
         Returns:
             List[str]: Datos nuevos desde el último checkpoint
         """
-        pass
 
 
 class BaseStreamingExtractor(BaseExtractor):
@@ -200,7 +187,6 @@ class BaseStreamingExtractor(BaseExtractor):
         Yields:
             str: Líneas de datos a medida que están disponibles
         """
-        pass
 
     @abstractmethod
     def is_stream_complete(self) -> bool:
@@ -210,7 +196,6 @@ class BaseStreamingExtractor(BaseExtractor):
         Returns:
             bool: True si el stream ha finalizado
         """
-        pass
 
     def extract_stream_with_timeout(self, timeout_seconds: int = 30) -> List[str]:
         """
@@ -223,7 +208,7 @@ class BaseStreamingExtractor(BaseExtractor):
             List[str]: Datos extraídos antes del timeout
         """
         import time
-        from threading import Thread, Event
+        from threading import Event, Thread
 
         data = []
         stop_event = Event()
@@ -280,7 +265,6 @@ class BaseBatchExtractor(BaseExtractor):
         Returns:
             List[str]: Lote de datos extraídos
         """
-        pass
 
     def extract_all_batches(self) -> Iterator[List[str]]:
         """

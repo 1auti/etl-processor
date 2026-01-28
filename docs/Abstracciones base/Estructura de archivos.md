@@ -23,6 +23,6 @@ src/
     │   └── elasticsearch_loader.py
     └── processors/            # Procesadores completos
         └── log_processing_processor.py
-        
-        
+
+
         ```text

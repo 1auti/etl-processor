@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 from typing import Dict, Optional
 
+
 class LogParser:
     """
     Parsea linea de log en formato Apache/Nginx
@@ -21,21 +22,20 @@ class LogParser:
 
     """
 
-
- # Patrón regex para Apache Combined Log Format
+    # Patrón regex para Apache Combined Log Format
     LOG_PATTERN = re.compile(
-        r'(?P<ip>\S+) '                          # Dirección IP
-        r'\S+ \S+ '                               # Campos ignorados (-, -)
-        r'\[(?P<timestamp>[^\]]+)\] '            # Timestamp entre []
-        r'"(?P<method>\S+) '                     # Método HTTP (GET, POST, etc.)
-        r'(?P<url>\S+) '                         # URL solicitada
-        r'\S+" '                                  # Versión HTTP (ignorada)
-        r'(?P<status>\d+) '                      # Código de estado HTTP
-        r'(?P<bytes>\d+)'                        # Bytes transferidos
+        r"(?P<ip>\S+) "  # Dirección IP
+        r"\S+ \S+ "  # Campos ignorados (-, -)
+        r"\[(?P<timestamp>[^\]]+)\] "  # Timestamp entre []
+        r'"(?P<method>\S+) '  # Método HTTP (GET, POST, etc.)
+        r"(?P<url>\S+) "  # URL solicitada
+        r'\S+" '  # Versión HTTP (ignorada)
+        r"(?P<status>\d+) "  # Código de estado HTTP
+        r"(?P<bytes>\d+)"  # Bytes transferidos
     )
 
     # Formato de timestamp de Apache
-    TIMESTAMP_FORMAT = '%d/%b/%Y:%H:%M:%S %z'
+    TIMESTAMP_FORMAT = "%d/%b/%Y:%H:%M:%S %z"
 
     @staticmethod
     def parse_line(line: str) -> Optional[Dict]:
@@ -66,17 +66,17 @@ class LogParser:
             data = match.groupdict()
 
             # Convertir timestamp a objeto datetime
-            timestamp_str = data['timestamp']
+            timestamp_str = data["timestamp"]
             timestamp = datetime.strptime(timestamp_str, LogParser.TIMESTAMP_FORMAT)
 
             # Construir diccionario de salida
             return {
-                'ip': data['ip'],
-                'timestamp': timestamp,
-                'method': data['method'],
-                'url': data['url'],
-                'status': int(data['status']),
-                'bytes': int(data['bytes'])
+                "ip": data["ip"],
+                "timestamp": timestamp,
+                "method": data["method"],
+                "url": data["url"],
+                "status": int(data["status"]),
+                "bytes": int(data["bytes"]),
             }
 
         except (ValueError, KeyError) as e:
@@ -96,7 +96,7 @@ class LogParser:
             bool: True si la IP es válida
         """
         # Validación simple de IPv4
-        parts = ip.split('.')
+        parts = ip.split(".")
         if len(parts) != 4:
             return False
 

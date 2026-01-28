@@ -11,11 +11,11 @@ def format_exception(exc: Exception) -> dict:
     """
 
     result = {
-        "exception_type":type(exc).__name__,
-        "message":str(exc),
+        "exception_type": type(exc).__name__,
+        "message": str(exc),
     }
 
-    #Si es una exception custom agregar detalles
+    # Si es una exception custom agregar detalles
     if isinstance(exc, EtlException):
         result["details"] = exc.details
 

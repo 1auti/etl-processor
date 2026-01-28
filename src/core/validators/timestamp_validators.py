@@ -3,23 +3,24 @@ Timestamp and date validators.
 """
 
 from datetime import datetime
-from typing import Union, Optional
+from typing import Optional, Union
 
 # Formatos de timestamp comunes
 TIMESTAMP_FORMATS = [
-    '%Y-%m-%d %H:%M:%S',
-    '%Y-%m-%dT%H:%M:%S',
-    '%Y-%m-%dT%H:%M:%S.%f',
-    '%Y-%m-%dT%H:%M:%S%z',
-    '%d/%b/%Y:%H:%M:%S %z',
-    '%a, %d %b %Y %H:%M:%S %Z',
-    '%Y%m%d%H%M%S',
-    '%s',
+    "%Y-%m-%d %H:%M:%S",
+    "%Y-%m-%dT%H:%M:%S",
+    "%Y-%m-%dT%H:%M:%S.%f",
+    "%Y-%m-%dT%H:%M:%S%z",
+    "%d/%b/%Y:%H:%M:%S %z",
+    "%a, %d %b %Y %H:%M:%S %Z",
+    "%Y%m%d%H%M%S",
+    "%s",
 ]
 
 
-def validate_timestamp(timestamp: Union[str, int, float],
-                      format_hint: Optional[str] = None) -> bool:
+def validate_timestamp(
+    timestamp: Union[str, int, float], format_hint: Optional[str] = None
+) -> bool:
     """Valida un timestamp en múltiples formatos."""
     if timestamp is None:
         return False
@@ -46,7 +47,7 @@ def validate_timestamp(timestamp: Union[str, int, float],
                 continue
 
         try:
-            datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
             return True
         except ValueError:
             pass
@@ -54,8 +55,9 @@ def validate_timestamp(timestamp: Union[str, int, float],
     return False
 
 
-def parse_timestamp(timestamp: Union[str, int, float],
-                   format_hint: Optional[str] = None) -> Optional[datetime]:
+def parse_timestamp(
+    timestamp: Union[str, int, float], format_hint: Optional[str] = None
+) -> Optional[datetime]:
     """Parsea un timestamp a datetime."""
     if timestamp is None:
         return None
@@ -81,7 +83,7 @@ def parse_timestamp(timestamp: Union[str, int, float],
                 continue
 
         try:
-            return datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            return datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
         except ValueError:
             pass
 
@@ -91,12 +93,18 @@ def parse_timestamp(timestamp: Union[str, int, float],
 def validate_timestamp_range(
     timestamp: Union[str, int, float, datetime],
     start_date: Optional[Union[str, int, float, datetime]] = None,
-    end_date: Optional[Union[str, int, float, datetime]] = None
+    end_date: Optional[Union[str, int, float, datetime]] = None,
 ) -> bool:
     """Valida que un timestamp esté dentro de un rango."""
     ts_dt = parse_timestamp(timestamp) if not isinstance(timestamp, datetime) else timestamp
-    start_dt = parse_timestamp(start_date) if start_date and not isinstance(start_date, datetime) else start_date
-    end_dt = parse_timestamp(end_date) if end_date and not isinstance(end_date, datetime) else end_date
+    start_dt = (
+        parse_timestamp(start_date)
+        if start_date and not isinstance(start_date, datetime)
+        else start_date
+    )
+    end_dt = (
+        parse_timestamp(end_date) if end_date and not isinstance(end_date, datetime) else end_date
+    )
 
     if ts_dt is None:
         return False

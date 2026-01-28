@@ -6,9 +6,9 @@ Contiene:
 - dataclases para procesamiento del ETl
 """
 
-from enum import Enum
 from dataclasses import dataclass
-from typing import Dict, Any, List, Optional, Tuple
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 # ========== TYPE ALIASES ==========
 LogRecord = Dict[str, Any]
@@ -17,9 +17,11 @@ DBConfig = Dict[str, Any]
 ProcessStats = Dict[str, Any]
 OperationResult = Tuple[bool, Optional[str]]
 
+
 # ========== ENUMS ==========
 class ProcessingStatus(Enum):
     """Status of ETL processing."""
+
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"
@@ -31,6 +33,7 @@ class ProcessingStatus(Enum):
 @dataclass
 class ProcessingResult:
     """Structured result of ETL processing."""
+
     success: bool
     records_processed: int
     errors: int
@@ -43,6 +46,7 @@ class ProcessingResult:
 @dataclass
 class ParserStats:
     """Statistics for parsing operations."""
+
     total_lines: int = 0
     parsed_successfully: int = 0
     parse_errors: int = 0
@@ -53,6 +57,7 @@ class ParserStats:
 @dataclass
 class ExtractionResult:
     """Result of data extraction."""
+
     raw_lines: List[str]
     source_info: Dict[str, Any]
     errors: List[str]

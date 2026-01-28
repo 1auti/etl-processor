@@ -3,12 +3,12 @@ URL and domain validators.
 """
 
 import re
+from typing import List
 from urllib.parse import urlparse
-from typing import List, Optional
 
 # Patrones regex
-URL_PATTERN = r'^(https?|ftp)://[^\s/$.?#].[^\s]*$'
-DOMAIN_PATTERN = r'^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$'
+URL_PATTERN = r"^(https?|ftp)://[^\s/$.?#].[^\s]*$"
+DOMAIN_PATTERN = r"^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$"
 
 
 def validate_url(url_string: str, require_https: bool = False) -> bool:
@@ -22,14 +22,14 @@ def validate_url(url_string: str, require_https: bool = False) -> bool:
     try:
         parsed = urlparse(url_string)
 
-        if require_https and parsed.scheme.lower() != 'https':
+        if require_https and parsed.scheme.lower() != "https":
             return False
 
         if not parsed.netloc:
             return False
 
-        if parsed.scheme in ('http', 'https'):
-            domain = parsed.netloc.split(':')[0]
+        if parsed.scheme in ("http", "https"):
+            domain = parsed.netloc.split(":")[0]
             if not re.match(DOMAIN_PATTERN, domain, re.IGNORECASE):
                 return False
 
@@ -41,7 +41,7 @@ def validate_url(url_string: str, require_https: bool = False) -> bool:
 
 def validate_http_url(url_string: str) -> bool:
     """Valida URLs HTTP/HTTPS."""
-    return validate_url(url_string) and urlparse(url_string).scheme in ('http', 'https')
+    return validate_url(url_string) and urlparse(url_string).scheme in ("http", "https")
 
 
 def validate_https_url(url_string: str) -> bool:

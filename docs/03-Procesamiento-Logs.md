@@ -22,7 +22,7 @@ flowchart TD
     L -->|Sí| M[INSERT batch restante]
     M --> N[Marcar como procesado]
     N --> O[Fin]
-    
+
     style K fill:#e1ffe1
     style D fill:#ffe1e1
 ```
@@ -37,27 +37,27 @@ import psycopg2
 class LogProcessor:
     """
     Procesa logs de Apache/Nginx y los carga en PostgreSQL.
-    
+
     Attributes:
         conn: Conexión a PostgreSQL
         batch_size: Tamaño del lote para inserts (default: 1000)
     """
-    
+
     def __init__(self, db_config, batch_size=1000):
         self.conn = psycopg2.connect(**db_config)
         self.batch_size = batch_size
         self.cursor = self.conn.cursor()
-    
+
     def parse_log_line(self, line):
         """
         Parsea una línea de log en formato Apache Combined.
-        
+
         Args:
             line (str): Línea del archivo de log
-            
+
         Returns:
             dict: Datos estructurados o None si el formato es inválido
-            
+
         Example:
             >>> line = '192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "GET /home HTTP/1.1" 200 4523'
             >>> result = processor.parse_log_line(line)
@@ -67,10 +67,10 @@ class LogProcessor:
         # Patrón regex para Apache Combined Log Format
         pattern = r'(\S+) \S+ \S+ \[(.*?)\] "(\S+) (\S+) \S+" (\d+) (\d+)'
         match = re.match(pattern, line)
-        
+
         if not match:
             return None
-            
+
         return {
             'ip': match.group(1),
             'timestamp': datetime.strptime(match.group(2), '%d/%b/%Y:%H:%M:%S %z'),
@@ -108,15 +108,15 @@ class TestLogProcessor(unittest.TestCase):
     def test_parse_valid_line(self):
         line = '192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "GET /home HTTP/1.1" 200 4523'
         result = processor.parse_log_line(line)
-        
+
         self.assertEqual(result['ip'], '192.168.1.1')
         self.assertEqual(result['method'], 'GET')
         self.assertEqual(result['status'], 200)
-    
+
     def test_parse_invalid_line(self):
         line = 'invalid log line'
         result = processor.parse_log_line(line)
-        
+
         self.assertIsNone(result)
 ```
 

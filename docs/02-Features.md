@@ -1,4 +1,4 @@
-#### **Feature 1: Restructuración y Arquitectura Base** 
+#### **Feature 1: Restructuración y Arquitectura Base**
 
 **Objetivo:** Crear la estructura de carpetas profesional y configuración base
 
@@ -13,7 +13,7 @@
 - [] Crear base abstracta donde los componentes van a hederar
 - [] Crear un sistema de reintentos ( decorador para reinentso automaticos
 - [] colector de metricas que se guarden en la base de datos
-- [] constantes que persistan en la la base de datos o no ver 
+- [] constantes que persistan en la la base de datos o no ver
 - [] crear type aliases : type hints customizados para mejor la doc
 
 ```plaintext
@@ -55,12 +55,12 @@ src/
 ```
 
 
-#### **Feature 3: Parsers Profesionales con Factory Pattern** 
+#### **Feature 3: Parsers Profesionales con Factory Pattern**
 
-**Objetivo:** Sistema extensible de parsers que detecta formato automáticamente 
+**Objetivo:** Sistema extensible de parsers que detecta formato automáticamente
 
-**Tareas:** 
-- []  Crear `BaseParser` (clase abstracta) 
+**Tareas:**
+- []  Crear `BaseParser` (clase abstracta)
 - [] Implementar `ApacheParser` robusto
 - []  Implementar `NginxParser` robusto
 - []  Crear `ParserFactory` que detecta formato automático
@@ -71,12 +71,12 @@ src/
 ```plaintext
 
 
-src/ 
-├── parsers/ 
-│ ├── base.py # BaseParser abstracto 
-│ ├── apache.py # ApacheParser 
-│ ├── nginx.py # NginxParser 
-│ ├── factory.py # ParserFactory (auto-detect) 
+src/
+├── parsers/
+│ ├── base.py # BaseParser abstracto
+│ ├── apache.py # ApacheParser
+│ ├── nginx.py # NginxParser
+│ ├── factory.py # ParserFactory (auto-detect)
 │ └── streaming.py # StreamingParser
 
 

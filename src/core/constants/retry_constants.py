@@ -3,9 +3,9 @@ class RetryConstants:
 
     # Configuración de reintentos
     DEFAULT_MAX_ATTEMPTS = 3
-    DEFAULT_INITIAL_DELAY = 1.0      # segundos
-    DEFAULT_BACKOFF_FACTOR = 2.0     # multiplicador exponencial
-    DEFAULT_MAX_DELAY = 30.0         # delay máximo en segundos
+    DEFAULT_INITIAL_DELAY = 1.0  # segundos
+    DEFAULT_BACKOFF_FACTOR = 2.0  # multiplicador exponencial
+    DEFAULT_MAX_DELAY = 30.0  # delay máximo en segundos
 
     # Timeouts
     CONNECTION_RETRY_TIMEOUT = 5.0

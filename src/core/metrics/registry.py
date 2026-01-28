@@ -3,10 +3,12 @@ Global metrics registry for easy access to collectors.
 Singleton pattern for shared metrics collection.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict
+
 from core import logger
-from .collector import AdvancedMetricsCollector
 from src.core.exceptions import MetricsError
+
+from .collector import AdvancedMetricsCollector
 
 
 class MetricsRegistry:
@@ -25,13 +27,11 @@ class MetricsRegistry:
 
     @classmethod
     def register_collector(
-        cls,
-        name: str,
-        db_config: Dict[str, Any],
-        **kwargs
+        cls, name: str, db_config: Dict[str, Any], **kwargs
     ) -> AdvancedMetricsCollector:
         """Register a new collector."""
         from .validators import validate_db_config
+
         validate_db_config(db_config)
 
         collector = AdvancedMetricsCollector(db_config, **kwargs)

@@ -5,24 +5,20 @@ from typing import Callable
 from core import logger
 
 
-def retry_database_operation(
-    max_attempts: int = 3,
-    delay: float = 1.0,
-    backoff: float = 2.0
-):
+def retry_database_operation(max_attempts: int = 3, delay: float = 1.0, backoff: float = 2.0):
     """
     Decorador especializado para operaciones de base de datos.
     Captura excepciones comunes de bases de datos.
     """
-    import psycopg2
     import mysql.connector
+    import psycopg2
 
     database_exceptions = (
         psycopg2.OperationalError,
         psycopg2.InterfaceError,
         mysql.connector.Error,
         ConnectionError,
-        TimeoutError
+        TimeoutError,
     )
 
     def decorator(func: Callable) -> Callable:
@@ -48,7 +44,7 @@ def retry_database_operation(
                     )
 
                     # Intentar resetear la conexión si es posible
-                    if hasattr(args[0], 'reset_connection'):
+                    if hasattr(args[0], "reset_connection"):
                         try:
                             args[0].reset_connection()
                         except Exception:
@@ -59,4 +55,5 @@ def retry_database_operation(
                     current_delay *= backoff
 
         return wrapper
+
     return decorator

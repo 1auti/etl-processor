@@ -1,10 +1,9 @@
-
-
 # ========== CONSTANTES DE MÉTRICAS ==========
+
 
 class MetricsConstants:
     """Constantes para el sistema de métricas."""
-    
+
     # Nombres de métricas estándar
     METRIC_LINES_EXTRACTED = "etl.lines_extracted"
     METRIC_RECORDS_PARSED = "etl.records_parsed"
@@ -17,7 +16,7 @@ class MetricsConstants:
 
     # Configuración de métricas
     DEFAULT_METRICS_BATCH_SIZE = 50
-    METRICS_FLUSH_INTERVAL = 60      # segundos
+    METRICS_FLUSH_INTERVAL = 60  # segundos
 
     # Tags comunes
     TAG_COMPONENT = "component"
