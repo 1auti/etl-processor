@@ -25,6 +25,9 @@ Uso típico:
 
 # Base models
 from .base import BaseETLModel
+
+# Enriched log models
+from .enriched_log import EnrichedLogEntry, GeoLocationInfo, SessionInfo, ThreatInfo, UserAgentInfo
 from .immutable_etl_model import ImmutableETLModel
 
 # Log models
@@ -44,6 +47,12 @@ __all__ = [
     "ProcessingResultModel",
     "ParserStatsModel",
     "ValidationErrorModel",
+    # Enriched models
+    "EnrichedLogEntry",
+    "GeoLocationInfo",
+    "UserAgentInfo",
+    "ThreatInfo",
+    "SessionInfo",
 ]
 
 __version__ = "1.0.0"

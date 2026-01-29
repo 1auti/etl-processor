@@ -36,10 +36,10 @@ src/
 
 **Tareas:**
 
-- [] Crear modelo `LogEntry` con Pydantic
-- [] Validadores custom para IP, URL, timestamp
-- []Modelo `ProcessingResult` para métricas
-- [] Modelo `ValidationError` para errores
+- [x] Crear modelo `LogEntry` con Pydantic
+- [x] Validadores custom para IP, URL, timestamp
+- [x]Modelo `ProcessingResult` para métricas
+- [x] Modelo `ValidationError` para errores
 - [] Modelo `EnrichedLogEntry` (con geo, user-agent, etc)
 - [] Serialización/Deserialización automática
 - [] Tests unitarios de validación
