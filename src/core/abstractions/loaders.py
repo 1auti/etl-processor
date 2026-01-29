@@ -6,8 +6,8 @@ en varios destinos (bases de datos, archivos, APIs, etc.).
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional, Tuple, ContextManager
 from contextlib import contextmanager
+from typing import Any, Dict, List
 
 from .types import LogRecord, LogRecordBatch, OperationResult
 
@@ -32,7 +32,6 @@ class BaseLoader(ABC):
         Returns:
             str: Nombre del cargador
         """
-        pass
 
     @property
     @abstractmethod
@@ -44,7 +43,6 @@ class BaseLoader(ABC):
             List[str]: Tipos de destinos soportados
             Ejemplo: ['postgresql', 'csv', 'elasticsearch']
         """
-        pass
 
     @abstractmethod
     def connect(self) -> OperationResult:
@@ -56,7 +54,6 @@ class BaseLoader(ABC):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     @abstractmethod
     def disconnect(self) -> None:
@@ -65,7 +62,6 @@ class BaseLoader(ABC):
 
         Debe llamarse después de completar todas las operaciones de carga.
         """
-        pass
 
     @abstractmethod
     def load_batch(self, records: LogRecordBatch) -> int:
@@ -81,7 +77,6 @@ class BaseLoader(ABC):
         Raises:
             Exception: Si la carga falla
         """
-        pass
 
     @abstractmethod
     def create_schema(self) -> OperationResult:
@@ -93,7 +88,6 @@ class BaseLoader(ABC):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     @abstractmethod
     def validate_destination(self) -> OperationResult:
@@ -103,7 +97,6 @@ class BaseLoader(ABC):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     def load_single(self, record: LogRecord) -> bool:
         """
@@ -129,11 +122,11 @@ class BaseLoader(ABC):
             Dict[str, Any]: Estadísticas como registros_cargados, errores, etc.
         """
         return {
-            'loader_name': self.name,
-            'records_loaded': 0,
-            'batch_count': 0,
-            'errors': 0,
-            'last_error': None
+            "loader_name": self.name,
+            "records_loaded": 0,
+            "batch_count": 0,
+            "errors": 0,
+            "last_error": None,
         }
 
     def health_check(self) -> Dict[str, Any]:
@@ -146,11 +139,11 @@ class BaseLoader(ABC):
         connection_ok, connection_msg = self.validate_destination()
 
         return {
-            'loader': self.name,
-            'connection_ok': connection_ok,
-            'connection_message': connection_msg,
-            'destination_type': ', '.join(self.supported_destinations),
-            'stats': self.get_stats()
+            "loader": self.name,
+            "connection_ok": connection_ok,
+            "connection_message": connection_msg,
+            "destination_type": ", ".join(self.supported_destinations),
+            "stats": self.get_stats(),
         }
 
     # Soporte para context manager para gestión automática de conexiones
@@ -194,11 +187,11 @@ class BaseBatchLoader(BaseLoader):
         self.batch_size = batch_size
         self.max_retries = max_retries
         self._stats = {
-            'total_records_loaded': 0,
-            'total_batches': 0,
-            'failed_batches': 0,
-            'retry_count': 0,
-            'connection_errors': 0
+            "total_records_loaded": 0,
+            "total_batches": 0,
+            "failed_batches": 0,
+            "retry_count": 0,
+            "connection_errors": 0,
         }
 
     def load_large_dataset(self, records: LogRecordBatch) -> Dict[str, Any]:
@@ -217,29 +210,27 @@ class BaseBatchLoader(BaseLoader):
 
         # Procesar en lotes
         for i in range(0, total_records, self.batch_size):
-            batch = records[i:i + self.batch_size]
+            batch = records[i : i + self.batch_size]
             batch_num = (i // self.batch_size) + 1
 
             try:
                 loaded = self._load_with_retry(batch)
                 total_loaded += loaded
-                self._stats['total_batches'] += 1
+                self._stats["total_batches"] += 1
 
             except Exception as e:
-                self._stats['failed_batches'] += 1
-                failed_batches.append({
-                    'batch_number': batch_num,
-                    'batch_size': len(batch),
-                    'error': str(e)
-                })
+                self._stats["failed_batches"] += 1
+                failed_batches.append(
+                    {"batch_number": batch_num, "batch_size": len(batch), "error": str(e)}
+                )
 
         return {
-            'total_records': total_records,
-            'successfully_loaded': total_loaded,
-            'failed': total_records - total_loaded,
-            'failed_batches': failed_batches,
-            'batch_size': self.batch_size,
-            'loader_stats': self._stats.copy()
+            "total_records": total_records,
+            "successfully_loaded": total_loaded,
+            "failed": total_records - total_loaded,
+            "failed_batches": failed_batches,
+            "batch_size": self.batch_size,
+            "loader_stats": self._stats.copy(),
         }
 
     def _load_with_retry(self, batch: LogRecordBatch) -> int:
@@ -263,14 +254,16 @@ class BaseBatchLoader(BaseLoader):
 
             except Exception as e:
                 last_error = e
-                self._stats['retry_count'] += 1
+                self._stats["retry_count"] += 1
 
                 # Opcional: Agregar delay entre reintentos
                 if attempt < self.max_retries - 1:
                     self._retry_delay(attempt)
 
         # Todos los reintentos fallaron
-        raise Exception(f"Error al cargar lote después de {self.max_retries} intentos: {last_error}")
+        raise Exception(
+            f"Error al cargar lote después de {self.max_retries} intentos: {last_error}"
+        )
 
     def _retry_delay(self, attempt: int) -> None:
         """
@@ -280,7 +273,8 @@ class BaseBatchLoader(BaseLoader):
             attempt: Número del intento actual (comenzando en 0)
         """
         import time
-        delay = min(2 ** attempt, 60)  # Backoff exponencial, máximo 60 segundos
+
+        delay = min(2**attempt, 60)  # Backoff exponencial, máximo 60 segundos
         time.sleep(delay)
 
     def get_stats(self) -> Dict[str, Any]:
@@ -305,7 +299,6 @@ class BaseTransactionalLoader(BaseBatchLoader):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     @abstractmethod
     def commit(self) -> OperationResult:
@@ -315,7 +308,6 @@ class BaseTransactionalLoader(BaseBatchLoader):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     @abstractmethod
     def rollback(self) -> OperationResult:
@@ -325,7 +317,6 @@ class BaseTransactionalLoader(BaseBatchLoader):
         Returns:
             OperationResult: (éxito, mensaje_error)
         """
-        pass
 
     @contextmanager
     def transaction_context(self):

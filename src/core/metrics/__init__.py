@@ -9,63 +9,46 @@ Provides:
 - Global registry for easy access
 """
 
-# Export from types
-from .types import (
-    Metric,
-    MetricAggregate,
-    MetricType,
-    MetricLevel,
-    MetricValue,
-    TagsDict
-)
-
 # Export from collector
 from .collector import AdvancedMetricsCollector
+
+# Export from decorators
+from .decorators import metrics_counter, metrics_error_counter, metrics_timer
+
+# Export from exporters
+from .exporters import ConsoleExporter, JSONExporter, PrometheusExporter
 
 # Export from registry
 from .registry import MetricsRegistry
 
-# Export from decorators
-from .decorators import (
-    metrics_timer,
-    metrics_counter,
-    metrics_error_counter
-)
-
-# Export from exporters
-from .exporters import (
-    PrometheusExporter,
-    JSONExporter,
-    ConsoleExporter
-)
+# Export from types
+from .types import Metric, MetricAggregate, MetricLevel, MetricType, MetricValue, TagsDict
 
 # Convenience exports
 __all__ = [
     # Types
-    'Metric',
-    'MetricAggregate',
-    'MetricType',
-    'MetricLevel',
-    'MetricValue',
-    'TagsDict',
-
+    "Metric",
+    "MetricAggregate",
+    "MetricType",
+    "MetricLevel",
+    "MetricValue",
+    "TagsDict",
     # Main classes
-    'AdvancedMetricsCollector',
-    'MetricsRegistry',
-
+    "AdvancedMetricsCollector",
+    "MetricsRegistry",
     # Decorators
-    'metrics_timer',
-    'metrics_counter',
-    'metrics_error_counter',
-
+    "metrics_timer",
+    "metrics_counter",
+    "metrics_error_counter",
     # Exporters
-    'PrometheusExporter',
-    'JSONExporter',
-    'ConsoleExporter',
+    "PrometheusExporter",
+    "JSONExporter",
+    "ConsoleExporter",
 ]
 
 # Version
-__version__ = '1.0.0'
+__version__ = "1.0.0"
+
 
 # Convenience function for quick metric recording
 def record_metric(name: str, value: float, **kwargs) -> None:

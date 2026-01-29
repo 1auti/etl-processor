@@ -3,28 +3,25 @@ Advanced metrics collector with PostgreSQL storage.
 Main class that handles metric collection and persistence.
 """
 
-import time
-import threading
-import json
-import random
-import inspect
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor
-from io import StringIO
-import csv
 import contextlib
+import csv
+import inspect
+import json
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+from io import StringIO
+from typing import Any, Dict, List, Optional
 
 import psycopg2
-from psycopg2.extras import RealDictCursor, Json
+from psycopg2.extras import RealDictCursor
 from psycopg2.pool import SimpleConnectionPool
 
-from .types import (
-    Metric, MetricAggregate, MetricType, MetricLevel,
-    MetricValue, TagsDict
-)
 from src.core.exceptions import MetricsError
 from src.core.logger import get_logger
+
+from .types import Metric, MetricAggregate, MetricLevel, MetricType, MetricValue, TagsDict
 
 logger = get_logger(__name__)
 
@@ -48,7 +45,7 @@ class AdvancedMetricsCollector:
         retention_days: int = 30,
         enable_aggregation: bool = True,
         max_workers: int = 2,
-        max_connections: int = 5
+        max_connections: int = 5,
     ):
         """
         Initialize the advanced metrics collector.
@@ -78,14 +75,14 @@ class AdvancedMetricsCollector:
 
         # Statistics
         self.stats = {
-            'total_metrics': 0,
-            'total_inserted': 0,
-            'total_errors': 0,
-            'buffer_overflow': 0,
-            'last_flush_time': None,
-            'aggregates_count': 0,
-            'flush_count': 0,
-            'background_flushes': 0
+            "total_metrics": 0,
+            "total_inserted": 0,
+            "total_errors": 0,
+            "buffer_overflow": 0,
+            "last_flush_time": None,
+            "aggregates_count": 0,
+            "flush_count": 0,
+            "background_flushes": 0,
         }
 
         # In-memory aggregation
@@ -94,8 +91,7 @@ class AdvancedMetricsCollector:
 
         # Background processing
         self.executor = ThreadPoolExecutor(
-            max_workers=max_workers,
-            thread_name_prefix="metrics-worker"
+            max_workers=max_workers, thread_name_prefix="metrics-worker"
         )
         self.flush_thread = None
         self.running = False
@@ -113,16 +109,14 @@ class AdvancedMetricsCollector:
             batch_size=batch_size,
             flush_interval=flush_interval,
             max_buffer_size=max_buffer_size,
-            max_connections=max_connections
+            max_connections=max_connections,
         )
 
     def _init_connection_pool(self) -> None:
         """Initialize PostgreSQL connection pool."""
         try:
             self.connection_pool = SimpleConnectionPool(
-                minconn=1,
-                maxconn=self.max_connections,
-                **self.db_config
+                minconn=1, maxconn=self.max_connections, **self.db_config
             )
             logger.debug("Connection pool inicializado")
         except Exception as e:
@@ -220,9 +214,7 @@ class AdvancedMetricsCollector:
 
         self.running = True
         self.flush_thread = threading.Thread(
-            target=self._background_flush_loop,
-            daemon=True,
-            name="metrics-flush-daemon"
+            target=self._background_flush_loop, daemon=True, name="metrics-flush-daemon"
         )
         self.flush_thread.start()
         logger.info("Background flush thread iniciado")
@@ -248,16 +240,12 @@ class AdvancedMetricsCollector:
                     time_since_flush = (datetime.now() - self.last_flush).total_seconds()
 
                     should_flush = (
-                        buffer_size >= self.batch_size or
-                        time_since_flush >= self.flush_interval
+                        buffer_size >= self.batch_size or time_since_flush >= self.flush_interval
                     )
 
                     if not should_flush:
                         # Wait for timeout or notification
-                        wait_time = min(
-                            self.flush_interval - time_since_flush,
-                            self.flush_interval
-                        )
+                        wait_time = min(self.flush_interval - time_since_flush, self.flush_interval)
                         if wait_time > 0:
                             self.flush_condition.wait(timeout=wait_time)
 
@@ -267,13 +255,14 @@ class AdvancedMetricsCollector:
                     time_since_flush = (datetime.now() - self.last_flush).total_seconds()
 
                     should_flush = (
-                        buffer_size >= self.batch_size or
-                        time_since_flush >= self.flush_interval or
-                        buffer_size > 0 and not self.running
+                        buffer_size >= self.batch_size
+                        or time_since_flush >= self.flush_interval
+                        or buffer_size > 0
+                        and not self.running
                     )
 
                 if should_flush:
-                    self.stats['background_flushes'] += 1
+                    self.stats["background_flushes"] += 1
                     self.flush()
 
                 # Small sleep to prevent CPU spinning
@@ -294,7 +283,7 @@ class AdvancedMetricsCollector:
         source: Optional[str] = None,
         unit: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
-        timestamp: Optional[datetime] = None
+        timestamp: Optional[datetime] = None,
     ) -> None:
         """
         Record a metric with all metadata.
@@ -330,23 +319,23 @@ class AdvancedMetricsCollector:
                 description=description,
                 source=source or self._get_caller_source(),
                 unit=unit,
-                metadata=metadata or {}
+                metadata=metadata or {},
             )
 
             # Add to buffer
             with self.buffer_lock:
                 # Check buffer limits
                 if len(self.metrics_buffer) >= self.max_buffer_size:
-                    self.stats['buffer_overflow'] += 1
+                    self.stats["buffer_overflow"] += 1
                     logger.warning(
                         "Buffer de métricas lleno, forzando flush",
                         buffer_size=len(self.metrics_buffer),
-                        max_buffer_size=self.max_buffer_size
+                        max_buffer_size=self.max_buffer_size,
                     )
                     self.flush(force=True)
 
                 self.metrics_buffer.append(metric)
-                self.stats['total_metrics'] += 1
+                self.stats["total_metrics"] += 1
 
                 # Update in-memory aggregates
                 if self.enable_aggregation:
@@ -360,21 +349,14 @@ class AdvancedMetricsCollector:
             # Log high-level metrics
             if level in (MetricLevel.ERROR, MetricLevel.CRITICAL):
                 logger.warning(
-                    "Métrica de error registrada",
-                    name=name,
-                    value=value,
-                    level=level.value
+                    "Métrica de error registrada", name=name, value=value, level=level.value
                 )
 
         except Exception as e:
             logger.error(
-                "Error registrando métrica",
-                name=name,
-                value=value,
-                error=str(e),
-                exc_info=True
+                "Error registrando métrica", name=name, value=value, error=str(e), exc_info=True
             )
-            self.stats['total_errors'] += 1
+            self.stats["total_errors"] += 1
             raise MetricsError(f"Failed to record metric '{name}': {e}")
 
     def _get_caller_source(self) -> str:
@@ -384,11 +366,11 @@ class AdvancedMetricsCollector:
             for frame_info in inspect.stack():
                 frame = frame_info.frame
                 module = inspect.getmodule(frame)
-                if module and 'metrics' not in module.__name__:
+                if module and "metrics" not in module.__name__:
                     # Return formatted source: module.function
                     func_name = frame_info.function
-                    if func_name == '<module>':
-                        return module.__name__.split('.')[-1]
+                    if func_name == "<module>":
+                        return module.__name__.split(".")[-1]
                     return f"{module.__name__.split('.')[-1]}.{func_name}"
         except Exception:
             pass
@@ -401,10 +383,9 @@ class AdvancedMetricsCollector:
         with self.aggregate_lock:
             if aggregate_key not in self.aggregates:
                 self.aggregates[aggregate_key] = MetricAggregate(
-                    name=metric.name,
-                    metric_type=metric.metric_type
+                    name=metric.name, metric_type=metric.metric_type
                 )
-                self.stats['aggregates_count'] = len(self.aggregates)
+                self.stats["aggregates_count"] = len(self.aggregates)
 
             self.aggregates[aggregate_key].update(metric)
 
@@ -429,26 +410,22 @@ class AdvancedMetricsCollector:
             if not metrics_to_flush:
                 return 0
 
-        logger.debug(
-            "Iniciando flush de métricas",
-            count=len(metrics_to_flush),
-            force=force
-        )
+        logger.debug("Iniciando flush de métricas", count=len(metrics_to_flush), force=force)
 
         try:
             inserted_count = self._bulk_insert_metrics(metrics_to_flush)
 
             # Update statistics
             with self.buffer_lock:
-                self.stats['total_inserted'] += inserted_count
-                self.stats['flush_count'] += 1
+                self.stats["total_inserted"] += inserted_count
+                self.stats["flush_count"] += 1
                 self.last_flush = datetime.now()
-                self.stats['last_flush_time'] = self.last_flush
+                self.stats["last_flush_time"] = self.last_flush
 
             logger.info(
                 "Flush completado exitosamente",
                 inserted=inserted_count,
-                total_inserted=self.stats['total_inserted']
+                total_inserted=self.stats["total_inserted"],
             )
 
             return inserted_count
@@ -458,14 +435,14 @@ class AdvancedMetricsCollector:
                 "Error en flush de métricas",
                 error=str(e),
                 count=len(metrics_to_flush),
-                exc_info=True
+                exc_info=True,
             )
 
             # Return metrics to buffer for retry
             with self.buffer_lock:
                 self.metrics_buffer.extend(metrics_to_flush)
 
-            self.stats['total_errors'] += 1
+            self.stats["total_errors"] += 1
             raise MetricsError(f"Failed to flush metrics: {e}")
 
     def _bulk_insert_metrics(self, metrics: List[Metric]) -> int:
@@ -475,33 +452,42 @@ class AdvancedMetricsCollector:
                 with conn.cursor() as cursor:
                     # Prepare data for COPY
                     csv_buffer = StringIO()
-                    writer = csv.writer(csv_buffer, delimiter='\t')
+                    writer = csv.writer(csv_buffer, delimiter="\t")
 
                     for metric in metrics:
-                        writer.writerow([
-                            metric.name,
-                            metric.value,
-                            metric.metric_type.value,
-                            metric.timestamp,
-                            json.dumps(metric.tags),
-                            metric.level.value,
-                            metric.description or '',
-                            metric.source or '',
-                            metric.unit or '',
-                            json.dumps(metric.metadata)
-                        ])
+                        writer.writerow(
+                            [
+                                metric.name,
+                                metric.value,
+                                metric.metric_type.value,
+                                metric.timestamp,
+                                json.dumps(metric.tags),
+                                metric.level.value,
+                                metric.description or "",
+                                metric.source or "",
+                                metric.unit or "",
+                                json.dumps(metric.metadata),
+                            ]
+                        )
 
                     csv_buffer.seek(0)
 
                     # Execute COPY command
                     cursor.copy_from(
                         csv_buffer,
-                        'metrics',
+                        "metrics",
                         columns=[
-                            'name', 'value', 'metric_type', 'timestamp',
-                            'tags', 'level', 'description', 'source',
-                            'unit', 'metadata'
-                        ]
+                            "name",
+                            "value",
+                            "metric_type",
+                            "timestamp",
+                            "tags",
+                            "level",
+                            "description",
+                            "source",
+                            "unit",
+                            "metadata",
+                        ],
                     )
 
                     conn.commit()
@@ -511,7 +497,7 @@ class AdvancedMetricsCollector:
             logger.error(
                 "Error de PostgreSQL en bulk insert",
                 error=str(e),
-                pgcode=e.pgcode if hasattr(e, 'pgcode') else None
+                pgcode=e.pgcode if hasattr(e, "pgcode") else None,
             )
             raise
 
@@ -521,7 +507,7 @@ class AdvancedMetricsCollector:
         name_filter: Optional[str] = None,
         metric_type: Optional[MetricType] = None,
         level: Optional[MetricLevel] = None,
-        limit: int = 100
+        limit: int = 100,
     ) -> Dict[str, Any]:
         """
         Get detailed metrics summary with filtering.
@@ -589,32 +575,34 @@ class AdvancedMetricsCollector:
 
                     # Build summary
                     summary = {
-                        'period_hours': hours,
-                        'total_metrics': sum(r['count'] for r in results),
-                        'unique_metrics': len(results),
-                        'error_metrics': sum(r['error_count'] for r in results),
-                        'warning_metrics': sum(r['warning_count'] for r in results),
-                        'timestamp': datetime.now().isoformat(),
-                        'metrics': []
+                        "period_hours": hours,
+                        "total_metrics": sum(r["count"] for r in results),
+                        "unique_metrics": len(results),
+                        "error_metrics": sum(r["error_count"] for r in results),
+                        "warning_metrics": sum(r["warning_count"] for r in results),
+                        "timestamp": datetime.now().isoformat(),
+                        "metrics": [],
                     }
 
                     for row in results:
                         metric_summary = {
-                            'name': row['name'],
-                            'type': row['metric_type'],
-                            'count': row['count'],
-                            'avg': float(row['avg_value']) if row['avg_value'] else 0,
-                            'min': float(row['min_value']) if row['min_value'] else 0,
-                            'max': float(row['max_value']) if row['max_value'] else 0,
-                            'p95': float(row['p95']) if row['p95'] else None,
-                            'p99': float(row['p99']) if row['p99'] else None,
-                            'error_count': row['error_count'],
-                            'warning_count': row['warning_count'],
-                            'first_seen': row['first_seen'].isoformat() if row['first_seen'] else None,
-                            'last_seen': row['last_seen'].isoformat() if row['last_seen'] else None,
-                            'latest_tags': row['latest_tags']
+                            "name": row["name"],
+                            "type": row["metric_type"],
+                            "count": row["count"],
+                            "avg": float(row["avg_value"]) if row["avg_value"] else 0,
+                            "min": float(row["min_value"]) if row["min_value"] else 0,
+                            "max": float(row["max_value"]) if row["max_value"] else 0,
+                            "p95": float(row["p95"]) if row["p95"] else None,
+                            "p99": float(row["p99"]) if row["p99"] else None,
+                            "error_count": row["error_count"],
+                            "warning_count": row["warning_count"],
+                            "first_seen": (
+                                row["first_seen"].isoformat() if row["first_seen"] else None
+                            ),
+                            "last_seen": row["last_seen"].isoformat() if row["last_seen"] else None,
+                            "latest_tags": row["latest_tags"],
                         }
-                        summary['metrics'].append(metric_summary)
+                        summary["metrics"].append(metric_summary)
 
                     return summary
 
@@ -627,16 +615,16 @@ class AdvancedMetricsCollector:
         with self.aggregate_lock:
             return {
                 key: {
-                    'name': agg.name,
-                    'type': agg.metric_type.value,
-                    'count': agg.count,
-                    'sum': agg.sum,
-                    'avg': agg.avg,
-                    'min': agg.min,
-                    'max': agg.max,
-                    'last_value': agg.last_value,
-                    'first_seen': agg.first_seen.isoformat() if agg.first_seen else None,
-                    'last_seen': agg.last_seen.isoformat() if agg.last_seen else None
+                    "name": agg.name,
+                    "type": agg.metric_type.value,
+                    "count": agg.count,
+                    "sum": agg.sum,
+                    "avg": agg.avg,
+                    "min": agg.min,
+                    "max": agg.max,
+                    "last_value": agg.last_value,
+                    "first_seen": agg.first_seen.isoformat() if agg.first_seen else None,
+                    "last_seen": agg.last_seen.isoformat() if agg.last_seen else None,
                 }
                 for key, agg in self.aggregates.items()
             }
@@ -649,21 +637,21 @@ class AdvancedMetricsCollector:
                 aggregates_count = len(self.aggregates)
 
             return {
-                'collector': {
-                    'buffer_size': buffer_size,
-                    'total_metrics': self.stats['total_metrics'],
-                    'total_inserted': self.stats['total_inserted'],
-                    'total_errors': self.stats['total_errors'],
-                    'buffer_overflow': self.stats['buffer_overflow'],
-                    'flush_count': self.stats['flush_count'],
-                    'background_flushes': self.stats['background_flushes'],
-                    'last_flush_time': self.stats['last_flush_time'],
-                    'aggregates_count': aggregates_count,
-                    'running': self.running,
-                    'flush_interval': self.flush_interval,
-                    'batch_size': self.batch_size
+                "collector": {
+                    "buffer_size": buffer_size,
+                    "total_metrics": self.stats["total_metrics"],
+                    "total_inserted": self.stats["total_inserted"],
+                    "total_errors": self.stats["total_errors"],
+                    "buffer_overflow": self.stats["buffer_overflow"],
+                    "flush_count": self.stats["flush_count"],
+                    "background_flushes": self.stats["background_flushes"],
+                    "last_flush_time": self.stats["last_flush_time"],
+                    "aggregates_count": aggregates_count,
+                    "running": self.running,
+                    "flush_interval": self.flush_interval,
+                    "batch_size": self.batch_size,
                 },
-                'aggregates': self.get_aggregates()
+                "aggregates": self.get_aggregates(),
             }
 
     def health_check(self) -> Dict[str, Any]:
@@ -679,22 +667,22 @@ class AdvancedMetricsCollector:
                 buffer_health = len(self.metrics_buffer) < self.max_buffer_size * 0.8
 
             return {
-                'status': 'healthy',
-                'database': 'connected' if db_ok else 'disconnected',
-                'buffer_health': 'ok' if buffer_health else 'warning',
-                'buffer_size': len(self.metrics_buffer),
-                'background_thread': 'running' if self.running else 'stopped',
-                'last_flush': self.stats['last_flush_time'],
-                'total_inserted': self.stats['total_inserted'],
-                'total_errors': self.stats['total_errors']
+                "status": "healthy",
+                "database": "connected" if db_ok else "disconnected",
+                "buffer_health": "ok" if buffer_health else "warning",
+                "buffer_size": len(self.metrics_buffer),
+                "background_thread": "running" if self.running else "stopped",
+                "last_flush": self.stats["last_flush_time"],
+                "total_inserted": self.stats["total_inserted"],
+                "total_errors": self.stats["total_errors"],
             }
 
         except Exception as e:
             return {
-                'status': 'unhealthy',
-                'error': str(e),
-                'database': 'disconnected',
-                'buffer_size': len(self.metrics_buffer)
+                "status": "unhealthy",
+                "error": str(e),
+                "database": "disconnected",
+                "buffer_size": len(self.metrics_buffer),
             }
 
     def cleanup_old_metrics(self) -> int:

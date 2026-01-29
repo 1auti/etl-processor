@@ -3,11 +3,13 @@ Gestor de conexion y operacion de PostgresSQL
 Manejo de conexiones , cracion de tablas y inserciones de datos
 """
 
+from typing import Dict, List, Optional
 
 import psycopg2
 from psycopg2.extras import execute_batch
-from typing import List, Dict, Optional
+
 from src.config import Config
+
 
 class DatabaseManager:
     """

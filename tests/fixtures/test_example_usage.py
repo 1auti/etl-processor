@@ -1,31 +1,24 @@
 # tests/test_example_usage.py
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from src.core.logger import (
-    configuration_structlog,
-    context_manager_logger,
-    decorador_logging,
-    logger_factory,
-    metrics_logger,
-    log_context,
-    get_logger,
+    MetricsLogger,
     configure_logging,
+    get_logger,
+    log_context,
     log_function_call,
-    MetricsLogger
 )
 
-class TestExampleUsage:
 
+class TestExampleUsage:
     def test_context_manager_usage(self):
         """Test específico del context manager"""
-
 
         configure_logging(log_level="INFO", json_logs=False)
         logger = get_logger(__name__)
 
         # Mock del logger para verificar llamadas
-        with patch.object(logger, 'info') as mock_info:
+        with patch.object(logger, "info") as mock_info:
             with log_context(request_id="abc-123", user="john"):
                 logger.info("Inside context")
 
@@ -34,7 +27,6 @@ class TestExampleUsage:
 
     def test_function_decorator(self):
         """Test del decorador log_function_call"""
-
 
         configure_logging(log_level="INFO", json_logs=False)
         logger = get_logger(__name__)
@@ -49,7 +41,6 @@ class TestExampleUsage:
 
     def test_metrics_logger(self):
         """Test de MetricsLogger"""
-        
 
         configure_logging(log_level="INFO", json_logs=False)
         logger = get_logger(__name__)

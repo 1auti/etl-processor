@@ -27,7 +27,6 @@ class BaseParser(ABC):
         Returns:
             str: Nombre del parser (ej: 'apache_parser', 'nginx_parser')
         """
-        pass
 
     @property
     @abstractmethod
@@ -39,7 +38,6 @@ class BaseParser(ABC):
             List[str]: Formatos soportados
             Ejemplo: ['apache_common', 'apache_combined', 'nginx']
         """
-        pass
 
     @abstractmethod
     def parse_line(self, line: str) -> Optional[LogRecord]:
@@ -52,7 +50,6 @@ class BaseParser(ABC):
         Returns:
             LogRecord: Registro parseado como diccionario, o None si falla el parsing
         """
-        pass
 
     @abstractmethod
     def validate_record(self, record: LogRecord) -> bool:
@@ -68,7 +65,6 @@ class BaseParser(ABC):
         Returns:
             bool: True si el registro es válido
         """
-        pass
 
     def parse_batch(self, lines: List[str]) -> LogRecordBatch:
         """
@@ -129,7 +125,7 @@ class BaseParser(ABC):
                 else:
                     stats.parse_errors += 1
 
-            except Exception as e:
+            except Exception:
                 stats.parse_errors += 1
                 # Opcional: registrar el error específico
                 continue

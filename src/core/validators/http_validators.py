@@ -2,18 +2,28 @@
 HTTP protocol validators.
 """
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 # Métodos HTTP válidos
-VALID_HTTP_METHODS = {'GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH', 'TRACE', 'CONNECT'}
+VALID_HTTP_METHODS = {
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "HEAD",
+    "OPTIONS",
+    "PATCH",
+    "TRACE",
+    "CONNECT",
+}
 
 # Códigos de estado HTTP por categoría
 HTTP_STATUS_CATEGORIES = {
-    'informational': range(100, 200),
-    'success': range(200, 300),
-    'redirection': range(300, 400),
-    'client_error': range(400, 500),
-    'server_error': range(500, 600)
+    "informational": range(100, 200),
+    "success": range(200, 300),
+    "redirection": range(300, 400),
+    "client_error": range(400, 500),
+    "server_error": range(500, 600),
 }
 
 

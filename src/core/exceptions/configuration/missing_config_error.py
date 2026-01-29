@@ -3,4 +3,3 @@ from src.core.exceptions.configuration.configuration_error import ConfigurationE
 
 class MissingConfigError(ConfigurationError):
     """Falta una configuracion requerida"""
-    pass

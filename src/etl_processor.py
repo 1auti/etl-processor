@@ -4,10 +4,11 @@ Orquesta el proceso de extracción, transformación y carga de logs.
 """
 
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
+
 from src.config import Config
-from src.log_parser import LogParser
 from src.db_manager import DatabaseManager
+from src.log_parser import LogParser
 
 
 class ETLProcessor:
@@ -30,12 +31,7 @@ class ETLProcessor:
         self.db = DatabaseManager()
 
         # Estadísticas del proceso
-        self.stats = {
-            'total_lines': 0,
-            'parsed_successfully': 0,
-            'parse_errors': 0,
-            'inserted': 0
-        }
+        self.stats = {"total_lines": 0, "parsed_successfully": 0, "parse_errors": 0, "inserted": 0}
 
     def extract(self) -> List[str]:
         """
@@ -54,10 +50,10 @@ class ETLProcessor:
 
         print(f" Leyendo archivo: {self.log_file_path}")
 
-        with open(log_path, 'r', encoding='utf-8') as f:
+        with open(log_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
 
-        self.stats['total_lines'] = len(lines)
+        self.stats["total_lines"] = len(lines)
         print(f" Total de líneas leídas: {len(lines)}")
 
         return lines
@@ -82,11 +78,11 @@ class ETLProcessor:
 
             if record:
                 parsed_records.append(record)
-                self.stats['parsed_successfully'] += 1
+                self.stats["parsed_successfully"] += 1
             else:
-                self.stats['parse_errors'] += 1
+                self.stats["parse_errors"] += 1
                 # Log de error solo para las primeras 5 líneas fallidas
-                if self.stats['parse_errors'] <= 5:
+                if self.stats["parse_errors"] <= 5:
                     print(f"  Error en línea {line_num}: formato inválido")
 
         print(f" Parseadas correctamente: {self.stats['parsed_successfully']}")
@@ -118,7 +114,7 @@ class ETLProcessor:
             total_inserted = 0
 
             for i in range(0, len(records), self.batch_size):
-                batch = records[i:i + self.batch_size]
+                batch = records[i : i + self.batch_size]
                 inserted = self.db.insert_batch(batch)
                 total_inserted += inserted
 
@@ -126,7 +122,7 @@ class ETLProcessor:
                 progress = (i + len(batch)) / len(records) * 100
                 print(f"  Progreso: {progress:.1f}% ({i + len(batch)}/{len(records)})")
 
-            self.stats['inserted'] = total_inserted
+            self.stats["inserted"] = total_inserted
             print(f" Total insertado: {total_inserted} registros")
 
         finally:
@@ -173,8 +169,8 @@ class ETLProcessor:
         print(f"  Errores de parsing:         {self.stats['parse_errors']}")
         print(f"  Registros insertados:       {self.stats['inserted']}")
 
-        if self.stats['total_lines'] > 0:
-            success_rate = (self.stats['parsed_successfully'] / self.stats['total_lines']) * 100
+        if self.stats["total_lines"] > 0:
+            success_rate = (self.stats["parsed_successfully"] / self.stats["total_lines"]) * 100
             print(f"  Tasa de éxito:              {success_rate:.2f}%")
 
         print("=" * 60)

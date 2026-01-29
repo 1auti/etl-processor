@@ -3,12 +3,14 @@ Tests unitarios para el LogParser.
 Verifica que el parseo de logs funcione correctamente.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
+
 from src.log_parser import LogParser
 
-
 # ========== FIXTURES ==========
+
 
 @pytest.fixture
 def parser():
@@ -26,14 +28,15 @@ def valid_log_line():
 def invalid_log_lines():
     """Fixture con líneas de log inválidas."""
     return [
-        'linea completamente invalida',
+        "linea completamente invalida",
         '192.168.1.100 - - [fecha mal formada] "GET /home" 200 4523',
-        '',  # línea vacía
-        '   ',  # solo espacios
+        "",  # línea vacía
+        "   ",  # solo espacios
     ]
 
 
 # ========== TESTS DE PARSEO EXITOSO ==========
+
 
 class TestLogParserSuccess:
     """Tests para casos de parseo exitoso."""
@@ -43,12 +46,12 @@ class TestLogParserSuccess:
         result = parser.parse_line(valid_log_line)
 
         assert result is not None
-        assert result['ip'] == '192.168.1.100'
-        assert result['method'] == 'GET'
-        assert result['url'] == '/home'
-        assert result['status'] == 200
-        assert result['bytes'] == 4523
-        assert isinstance(result['timestamp'], datetime)
+        assert result["ip"] == "192.168.1.100"
+        assert result["method"] == "GET"
+        assert result["url"] == "/home"
+        assert result["status"] == 200
+        assert result["bytes"] == 4523
+        assert isinstance(result["timestamp"], datetime)
 
     def test_parse_post_request(self, parser):
         """Verifica que se parseen correctamente requests POST."""
@@ -56,21 +59,24 @@ class TestLogParserSuccess:
         result = parser.parse_line(line)
 
         assert result is not None
-        assert result['method'] == 'POST'
-        assert result['url'] == '/login'
-        assert result['status'] == 401
+        assert result["method"] == "POST"
+        assert result["url"] == "/login"
+        assert result["status"] == 401
 
     def test_parse_different_ips(self, parser):
         """Verifica que se parseen correctamente diferentes IPs."""
         test_cases = [
-            ('192.168.1.1', '192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100'),
-            ('10.0.0.1', '10.0.0.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100'),
-            ('172.16.0.1', '172.16.0.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100'),
+            (
+                "192.168.1.1",
+                '192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100',
+            ),
+            ("10.0.0.1", '10.0.0.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100'),
+            ("172.16.0.1", '172.16.0.1 - - [10/Jan/2026:14:23:45 +0000] "GET / HTTP/1.1" 200 100'),
         ]
 
         for expected_ip, log_line in test_cases:
             result = parser.parse_line(log_line)
-            assert result['ip'] == expected_ip
+            assert result["ip"] == expected_ip
 
     def test_parse_different_status_codes(self, parser):
         """Verifica que se parseen correctamente diferentes códigos de estado."""
@@ -79,7 +85,7 @@ class TestLogParserSuccess:
         for status in status_codes:
             line = f'192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "GET /test HTTP/1.1" {status} 100'
             result = parser.parse_line(line)
-            assert result['status'] == status
+            assert result["status"] == status
 
     def test_parse_large_response(self, parser):
         """Verifica que se manejen correctamente respuestas grandes."""
@@ -87,7 +93,7 @@ class TestLogParserSuccess:
         result = parser.parse_line(line)
 
         assert result is not None
-        assert result['bytes'] == 999999999
+        assert result["bytes"] == 999999999
 
     def test_parse_complex_url(self, parser):
         """Verifica que se parseen URLs complejas con paths y query strings."""
@@ -95,10 +101,11 @@ class TestLogParserSuccess:
         result = parser.parse_line(line)
 
         assert result is not None
-        assert '/api/users?id=123&sort=asc' in result['url']
+        assert "/api/users?id=123&sort=asc" in result["url"]
 
 
 # ========== TESTS DE PARSEO FALLIDO ==========
+
 
 class TestLogParserFailure:
     """Tests para casos de parseo fallido."""
@@ -111,7 +118,7 @@ class TestLogParserFailure:
 
     def test_parse_empty_string(self, parser):
         """Verifica que string vacío retorne None."""
-        result = parser.parse_line('')
+        result = parser.parse_line("")
         assert result is None
 
     def test_parse_malformed_timestamp(self, parser):
@@ -123,12 +130,13 @@ class TestLogParserFailure:
 
 # ========== TESTS DE VALIDACIÓN ==========
 
+
 class TestValidationMethods:
     """Tests para métodos de validación."""
 
     def test_validate_ip_valid(self, parser):
         """Verifica que IPs válidas pasen la validación."""
-        valid_ips = ['192.168.1.1', '10.0.0.1', '172.16.0.1', '8.8.8.8']
+        valid_ips = ["192.168.1.1", "10.0.0.1", "172.16.0.1", "8.8.8.8"]
 
         for ip in valid_ips:
             assert parser.validate_ip(ip) is True
@@ -136,11 +144,11 @@ class TestValidationMethods:
     def test_validate_ip_invalid(self, parser):
         """Verifica que IPs inválidas no pasen la validación."""
         invalid_ips = [
-            '256.1.1.1',  # octeto > 255
-            '192.168.1',  # faltan octetos
-            '192.168.1.1.1',  # demasiados octetos
-            'not.an.ip.address',
-            '',
+            "256.1.1.1",  # octeto > 255
+            "192.168.1",  # faltan octetos
+            "192.168.1.1.1",  # demasiados octetos
+            "not.an.ip.address",
+            "",
         ]
 
         for ip in invalid_ips:
@@ -159,35 +167,43 @@ class TestValidationMethods:
 
 # ========== TESTS PARAMETRIZADOS ==========
 
-@pytest.mark.parametrize("method,expected", [
-    ("GET", "GET"),
-    ("POST", "POST"),
-    ("PUT", "PUT"),
-    ("DELETE", "DELETE"),
-    ("PATCH", "PATCH"),
-])
+
+@pytest.mark.parametrize(
+    "method,expected",
+    [
+        ("GET", "GET"),
+        ("POST", "POST"),
+        ("PUT", "PUT"),
+        ("DELETE", "DELETE"),
+        ("PATCH", "PATCH"),
+    ],
+)
 def test_parse_http_methods(parser, method, expected):
     """Verifica que se parseen correctamente todos los métodos HTTP."""
     line = f'192.168.1.1 - - [10/Jan/2026:14:23:45 +0000] "{method} /test HTTP/1.1" 200 100'
     result = parser.parse_line(line)
 
     assert result is not None
-    assert result['method'] == expected
+    assert result["method"] == expected
 
 
-@pytest.mark.parametrize("ip,is_valid", [
-    ("192.168.1.1", True),
-    ("10.0.0.1", True),
-    ("256.1.1.1", False),
-    ("192.168.1", False),
-    ("invalid", False),
-])
+@pytest.mark.parametrize(
+    "ip,is_valid",
+    [
+        ("192.168.1.1", True),
+        ("10.0.0.1", True),
+        ("256.1.1.1", False),
+        ("192.168.1", False),
+        ("invalid", False),
+    ],
+)
 def test_ip_validation_parametrized(parser, ip, is_valid):
     """Test parametrizado para validación de IPs."""
     assert parser.validate_ip(ip) == is_valid
 
 
 # ========== TESTS DE PERFORMANCE ==========
+
 
 class TestPerformance:
     """Tests de rendimiento del parser."""
@@ -218,6 +234,7 @@ class TestPerformance:
 
 # ========== TESTS DE INTEGRACIÓN ==========
 
+
 class TestIntegration:
     """Tests de integración del parser."""
 
@@ -225,12 +242,12 @@ class TestIntegration:
         """Verifica que se pueda parsear el archivo de logs de ejemplo."""
         from pathlib import Path
 
-        log_file = Path('sample_logs.txt')
+        log_file = Path("sample_logs.txt")
 
         if not log_file.exists():
             pytest.skip("sample_logs.txt no encontrado")
 
-        with open(log_file, 'r') as f:
+        with open(log_file, "r") as f:
             lines = f.readlines()
 
         results = [parser.parse_line(line.strip()) for line in lines]
@@ -247,4 +264,4 @@ class TestIntegration:
 
 if __name__ == "__main__":
     # Ejecutar tests con pytest
-    pytest.main([__file__, '-v', '--tb=short'])
+    pytest.main([__file__, "-v", "--tb=short"])
