@@ -13,7 +13,7 @@ from typing import Any, Dict, Iterator, List, Optional
 from .types import ExtractionResult
 
 
-class BaseExtractor(ABC, AbstractContextManager):
+class BaseExtractor(AbstractContextManager):
     """
     Clase base abstracta para extractores de datos.
 

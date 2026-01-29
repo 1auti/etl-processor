@@ -24,7 +24,8 @@ Uso típico:
 """
 
 # Base models
-from .base import BaseETLModel, ImmutableETLModel
+from .base import BaseETLModel
+from .immutable_etl_model import ImmutableETLModel
 
 # Log models
 from .log_entry import HTTPMethod, LogEntry

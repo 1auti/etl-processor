@@ -15,8 +15,7 @@ from typing import Optional
 from pydantic import Field, field_validator, model_validator
 
 from src.core.validators import validate_http_method, validate_http_status, validate_ip_address
-
-from .base import BaseETLModel
+from src.models.base import BaseETLModel
 
 
 class HTTPMethod(str, Enum):

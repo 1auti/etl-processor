@@ -12,11 +12,11 @@ El dataclass es el contrato, Pydantic es la implementación validada.
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from pydantic import Field, field_validator
+from pydantic import ConfigDict, Field, field_validator
 
 from src.core.abstractions.types import ProcessingStatus
-
-from .base import BaseETLModel, ImmutableETLModel
+from src.models.base import BaseETLModel
+from src.models.immutable_etl_model import ImmutableETLModel
 
 
 class ProcessingResultModel(ImmutableETLModel):
@@ -59,6 +59,8 @@ class ProcessingResultModel(ImmutableETLModel):
     details: Optional[Dict[str, Any]] = Field(
         None, description="Detalles adicionales del procesamiento"
     )
+
+    model_config = ConfigDict(use_enum_values=False)
 
     @field_validator("status")
     @classmethod

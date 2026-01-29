@@ -1,5 +1,6 @@
-from base import BaseETLModel
 from pydantic import ConfigDict
+
+from src.models.base import BaseETLModel
 
 
 class ImmutableETLModel(BaseETLModel):
