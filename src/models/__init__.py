@@ -36,6 +36,9 @@ from .log_entry import HTTPMethod, LogEntry
 # Result models
 from .results import ParserStatsModel, ProcessingResultModel, ValidationErrorModel
 
+# Serializers
+from .serializers import ModelDeserializer, ModelSerializer
+
 __all__ = [
     # Base
     "BaseETLModel",
@@ -53,6 +56,9 @@ __all__ = [
     "UserAgentInfo",
     "ThreatInfo",
     "SessionInfo",
+    # Serializers
+    "ModelSerializer",
+    "ModelDeserializer",
 ]
 
 __version__ = "1.0.0"

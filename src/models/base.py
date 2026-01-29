@@ -33,6 +33,10 @@ class BaseETLModel(BaseModel):
     def to_json(self, **kwargs) -> str:
         return self.model_dump_json(**kwargs)
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Alias de to_log_record() para conveniencia."""
+        return self.to_log_record()
+
     """ Creamos una instancia valida desde LogRecord (Dict sin validacion)
         Args:
              record: Log parseado ( sin validacion )
