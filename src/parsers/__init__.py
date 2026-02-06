@@ -30,15 +30,13 @@ Para agregar un nuevo parser:
 """
 
 from src.parsers.apache_parser import ApacheParser
+from src.parsers.file_parser import FileParser
 from src.parsers.nginx_parser import NginxParser
 from src.parsers.parser_factory import ParserFactory
+from src.parsers.streaming_parser import StreamingParser
 
 # Exportar clases públicas
-__all__ = [
-    "ApacheParser",
-    "NginxParser",
-    "ParserFactory",
-]
+__all__ = ["ApacheParser", "NginxParser", "ParserFactory", "FileParser", "StreamingParser"]
 
 # Metadata del módulo
 __version__ = "1.0.0"

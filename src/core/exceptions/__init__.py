@@ -10,7 +10,13 @@ from .checkpoint import CheckpointCorruptedError, CheckpointError, CheckpointNot
 from .configuration import ConfigurationError, InvalidConfigError, MissingConfigError
 from .enrichment import EnrichmentError, GeoIpLookupError, UserAgentParseError
 from .etl_exception import EtlException
-from .file import FileAlredyProcessedError, FileCorruptedError, FileError, FilePermissionError
+from .file import (
+    FileAlredyProcessedError,
+    FileCorruptedError,
+    FileError,
+    FileNotFoundExcepction,
+    FilePermissionError,
+)
 from .metrics import (
     MetricsAggregationError,
     MetricsBufferError,
@@ -62,6 +68,7 @@ __all__ = [
     "FileCorruptedError",
     "FileError",
     "FilePermissionError",
+    "FileNotFoundExcepction",
     # Log exceptions
     "InvalidLogFormatError",
     "ParsingError",

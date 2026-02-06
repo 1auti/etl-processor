@@ -70,7 +70,7 @@ class ApacheParser(BaseParser):
             return None
 
         # 2. Aplicar regex
-        match = self.LOG_PATTERN.match(line.strip())
+        match = self.LOG_PATTERN.fullmatch(line.strip())
         if not match:
             return None
 
