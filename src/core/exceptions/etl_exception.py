@@ -3,7 +3,8 @@ class EtlException(Exception):
     TOdas las exceptions custom heredan de esta
     """
 
-def __init__(self,message:str, details: dict = None):
+
+def __init__(self, message: str, details: dict = None):
     """
     Args:
     message: Mensaje descriptivo del error
@@ -14,14 +15,10 @@ def __init__(self,message:str, details: dict = None):
     self.message = message
     self.details = details or {}
 
+
 def __str__(self):
     if self.details:
         details_str = ", ".join(f"{k}={v}" for k, v in self.details.items())
         return f"{self.message} [{details_str}]"
 
     return self.message
-
-
-
-
-

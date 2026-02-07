@@ -1,4 +1,4 @@
-from core.exceptions.etl_exception import EtlException
+from src.core.exceptions.etl_exception import EtlException
 
 
 def format_exception(exc: Exception) -> dict:
@@ -11,12 +11,12 @@ def format_exception(exc: Exception) -> dict:
     """
 
     result = {
-        "exception_type":type(exc).__name__,
-        "message":str(exc),
+        "exception_type": type(exc).__name__,
+        "message": str(exc),
     }
 
-    #Si es una exception custom agregar detalles
-    if isinstance(exc, EtlException()):
+    # Si es una exception custom agregar detalles
+    if isinstance(exc, EtlException):
         result["details"] = exc.details
 
     return result

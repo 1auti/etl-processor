@@ -1,19 +1,20 @@
 """Centralizacion de configuracion de procesadores"""
 
-import logging
-import sys
 import datetime
 from pathlib import Path
 
+
 def add_log_level(logger, method_name, event_dict):
     """Agregamos el nivel del logs al event_dict"""
-    event_dict['level'] = method_name.upper()
+    event_dict["level"] = method_name.upper()
     return event_dict
+
 
 def add_timestamp(logger, method_name, event_dict):
     """Agregamos el timestamp ISO con timezone"""
-    event_dict['timestamp'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    event_dict["timestamp"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     return event_dict
+
 
 def add_caller_info(logger, method_name, event_dict):
     """Agrega información del caller (archivo, línea, función)."""
@@ -30,19 +31,14 @@ def add_caller_info(logger, method_name, event_dict):
 
             # Ignorar frames internos de logging
             filename = frame.f_code.co_filename
-            if 'structlog' not in filename and 'logging' not in filename:
-                event_dict['caller'] = {
-                    'file': Path(filename).name,
-                    'line': frame.f_lineno,
-                    'function': frame.f_code.co_name
+            if "structlog" not in filename and "logging" not in filename:
+                event_dict["caller"] = {
+                    "file": Path(filename).name,
+                    "line": frame.f_lineno,
+                    "function": frame.f_code.co_name,
                 }
                 break
     finally:
         del frame
 
     return event_dict
-
-
-
-
-

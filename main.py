@@ -4,8 +4,9 @@ Punto de entrada principal del procesador de logs.
 """
 
 import sys
-from src.etl_processor import ETLProcessor
+
 from src.config import Config
+from src.etl_processor import ETLProcessor
 
 
 def main():

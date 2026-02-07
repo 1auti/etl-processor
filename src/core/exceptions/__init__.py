@@ -5,72 +5,18 @@ Este módulo centraliza todas las exportaciones de excepciones del sistema ETL.
 Proporciona una API unificada para el manejo de errores.
 """
 
-from .etl_exception import EtlException
-
 # Import from subpackages
-from .checkpoint import (
-    CheckpointCorruptedError,
-    CheckpointError,
-    CheckpointNotFoundError
-)
-
-from .configuration import (
-    ConfigurationError,
-    InvalidConfigError,
-    MissingConfigError
-)
-
-from .enrichment import (
-    EnrichmentError,
-    GeoIpLookupError,
-    UserAgentParseError
-)
-
+from .checkpoint import CheckpointCorruptedError, CheckpointError, CheckpointNotFoundError
+from .configuration import ConfigurationError, InvalidConfigError, MissingConfigError
+from .enrichment import EnrichmentError, GeoIpLookupError, UserAgentParseError
+from .etl_exception import EtlException
 from .file import (
     FileAlredyProcessedError,
     FileCorruptedError,
     FileError,
-    FilePermissionError
+    FileNotFoundExcepction,
+    FilePermissionError,
 )
-
-from .parsing import (
-    InvalidLogFormatError,
-    ParsingError,
-    UnsupportedLogFormatError
-)
-
-from .processing import (
-    BatchProcessingError,
-    PipelineError,
-    ProcessingError
-)
-
-from .retry import (
-    RetryExhaustedError,
-)
-
-from .storage import (
-    DatabaseConnectionError,
-    DatabaseInsertError,
-    DatabaseQueryError,
-    StorageError,
-    TransactionError
-)
-
-from .utility import (
-    utility_error,
-)
-
-from .validation import (
-    InvalidHttpMethodError,
-    InvalidIpAddresError,
-    InvalidStatusCodeError,
-    InvalidTimestampError,
-    invalidUrlError,
-    SuspiciousPatternError,
-    ValidationError
-)
-
 from .metrics import (
     MetricsAggregationError,
     MetricsBufferError,
@@ -78,142 +24,151 @@ from .metrics import (
     MetricsConnectionError,
     MetricsError,
     MetricsStorageError,
-    MetricsValidationError
+    MetricsValidationError,
+)
+from .parsing import InvalidLogFormatError, ParsingError, UnsupportedLogFormatError
+from .processing import BatchProcessingError, PipelineError, ProcessingError
+from .retry import RetryExhaustedError
+from .storage import (
+    DatabaseConnectionError,
+    DatabaseInsertError,
+    DatabaseQueryError,
+    StorageError,
+    TransactionError,
+)
+from .utility import utility_error
+from .validation import (
+    InvalidHttpMethodError,
+    InvalidIpAddresError,
+    InvalidStatusCodeError,
+    InvalidTimestampError,
+    SuspiciousPatternError,
+    ValidationError,
+    invalidUrlError,
 )
 
 # Re-export everything
 __all__ = [
-
     # Exception base
-    'EtlException',
-
+    "EtlException",
     # Checkpoint exceptions
-    'CheckpointCorruptedError',
-    'CheckpointError',
-    'CheckpointNotFoundError',
-
+    "CheckpointCorruptedError",
+    "CheckpointError",
+    "CheckpointNotFoundError",
     # Config exceptions
-    'ConfigurationError',
-    'InvalidConfigError',
-    'MissingConfigError',
-
+    "ConfigurationError",
+    "InvalidConfigError",
+    "MissingConfigError",
     # Enrichment exceptions
-    'EnrichmentError',
-    'GeoIpLookupError',
-    'UserAgentParseError',
-
+    "EnrichmentError",
+    "GeoIpLookupError",
+    "UserAgentParseError",
     # File exceptions
-    'FileAlredyProcessedError',
-    'FileCorruptedError',
-    'FileError',
-    'FilePermissionError',
-
+    "FileAlredyProcessedError",
+    "FileCorruptedError",
+    "FileError",
+    "FilePermissionError",
+    "FileNotFoundExcepction",
     # Log exceptions
-    'InvalidLogFormatError',
-    'ParsingError',
-    'UnsupportedLogFormatError',
-
+    "InvalidLogFormatError",
+    "ParsingError",
+    "UnsupportedLogFormatError",
     # Processing exceptions
-    'BatchProcessingError',
-    'PipelineError',
-    'ProcessingError',
-
+    "BatchProcessingError",
+    "PipelineError",
+    "ProcessingError",
     # Retry exceptions
-    'RetryExhaustedError',
-
+    "RetryExhaustedError",
     # Storage exceptions
-    'DatabaseConnectionError',
-    'DatabaseInsertError',
-    'DatabaseQueryError',  # Corregido de DatabaeQueryError
-    'StorageError',
-    'TransactionError',
-
+    "DatabaseConnectionError",
+    "DatabaseInsertError",
+    "DatabaseQueryError",  # Corregido de DatabaeQueryError
+    "StorageError",
+    "TransactionError",
     # Utility exceptions
-    'utility_error',
-
+    "utility_error",
     # Validation exceptions
-    'InvalidHttpMethodError',
-    'InvalidIpAddresError',
-    'InvalidStatusCodeError',
-    'InvalidTimestampError',
-    'invalidUrlError',
-    'SuspiciousPatternError',
-    'ValidationError'
-
+    "InvalidHttpMethodError",
+    "InvalidIpAddresError",
+    "InvalidStatusCodeError",
+    "InvalidTimestampError",
+    "invalidUrlError",
+    "SuspiciousPatternError",
+    "ValidationError"
     # Metrics exceptions
-    'MetricsAggregationError',
-    'MetricsBufferError',
-    'MetricsConfigurationError',
-    'MetricsConnectionError',
-    'MetricsError',
-    'MetricsStorageError',
-    'MetricsValidationError'
+    "MetricsAggregationError",
+    "MetricsBufferError",
+    "MetricsConfigurationError",
+    "MetricsConnectionError",
+    "MetricsError",
+    "MetricsStorageError",
+    "MetricsValidationError",
 ]
 
 # Grupos de excepciones para importación selectiva
 CHECKPOINT_EXCEPTIONS = [
-    'CheckpointCorruptedError',
-    'CheckpointError',
-    'CheckpointNotFoundError',
+    "CheckpointCorruptedError",
+    "CheckpointError",
+    "CheckpointNotFoundError",
 ]
 
 CONFIG_EXCEPTIONS = [
-    'ConfigurationError',
-    'InvalidConfigError',
-    'MissingConfigError',
+    "ConfigurationError",
+    "InvalidConfigError",
+    "MissingConfigError",
 ]
 
 ENRICHMENT_EXCEPTIONS = [
-    'EnrichmentError',
-    'GeoIpLookupError',
-    'UserAgentParseError',
+    "EnrichmentError",
+    "GeoIpLookupError",
+    "UserAgentParseError",
 ]
 
 FILE_EXCEPTIONS = [
-    'FileAlredyProcessedError',
-    'FileCorruptedError',
-    'FileError',
-    'FilePermissionError',
+    "FileAlredyProcessedError",
+    "FileCorruptedError",
+    "FileError",
+    "FilePermissionError",
 ]
 
 LOG_EXCEPTIONS = [
-    'InvalidLogFormatError',
-    'ParsingError',
-    'UnsupportedLogFormatError',
+    "InvalidLogFormatError",
+    "ParsingError",
+    "UnsupportedLogFormatError",
 ]
 
 PROCESSING_EXCEPTIONS = [
-    'BatchProcessingError',
-    'PipelineError',
-    'ProcessingError',
+    "BatchProcessingError",
+    "PipelineError",
+    "ProcessingError",
 ]
 
 STORAGE_EXCEPTIONS = [
-    'DatabaseConnectionError',
-    'DatabaseInsertError',
-    'DatabaseQueryError',
-    'StorageError',
-    'TransactionError',
+    "DatabaseConnectionError",
+    "DatabaseInsertError",
+    "DatabaseQueryError",
+    "StorageError",
+    "TransactionError",
 ]
 
 VALIDATION_EXCEPTIONS = [
-    'InvalidHttpMethodError',
-    'InvalidIpAddresError',
-    'InvalidStatusCodeError',
-    'InvalidTimestampError',
-    'invalidUrlError',
-    'SuspiciousPatternError',
-    'ValidationError'
+    "InvalidHttpMethodError",
+    "InvalidIpAddresError",
+    "InvalidStatusCodeError",
+    "InvalidTimestampError",
+    "invalidUrlError",
+    "SuspiciousPatternError",
+    "ValidationError",
 ]
 
 # Diccionario con todos los grupos (útil para documentación)
 EXCEPTION_GROUPS = {
-    'checkpoint': CHECKPOINT_EXCEPTIONS,
-    'config': CONFIG_EXCEPTIONS,
-    'enrichment': ENRICHMENT_EXCEPTIONS,
-    'file': FILE_EXCEPTIONS,
-    'log': LOG_EXCEPTIONS,
-    'processing': PROCESSING_EXCEPTIONS,
-    'storage': STORAGE_EXCEPTIONS,
-    'validation': VALIDATION_EXCEPTIONS,
+    "checkpoint": CHECKPOINT_EXCEPTIONS,
+    "config": CONFIG_EXCEPTIONS,
+    "enrichment": ENRICHMENT_EXCEPTIONS,
+    "file": FILE_EXCEPTIONS,
+    "log": LOG_EXCEPTIONS,
+    "processing": PROCESSING_EXCEPTIONS,
+    "storage": STORAGE_EXCEPTIONS,
+    "validation": VALIDATION_EXCEPTIONS,
 }

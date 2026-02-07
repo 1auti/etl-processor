@@ -1,5 +1,5 @@
-from contextlib import contextmanager
 import time
+from contextlib import contextmanager
 from typing import Tuple, Type
 
 from core import logger
@@ -11,7 +11,7 @@ def retry_context(
     delay: float = 1.0,
     backoff: float = 2.0,
     exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    operation_name: str = "operation"
+    operation_name: str = "operation",
 ):
     """
     Context manager para reintentos de bloques de código.

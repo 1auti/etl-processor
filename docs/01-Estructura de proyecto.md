@@ -92,4 +92,3 @@ python-etl/
 ├── .env.example                       # Ejemplo de variables
 └── README.md                          # Documentación
 ```
-

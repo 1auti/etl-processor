@@ -1,7 +1,5 @@
-from xml.dom import ValidationErr
+from src.core.exceptions.validation.validation_error import ValidationError
 
 
-class InvalidStatusCodeError(ValidationErr()):
+class InvalidStatusCodeError(ValidationError):
     """Metodo de status no valido"""
-    pass
-

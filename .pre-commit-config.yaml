@@ -1,0 +1,62 @@
+# Configuración simplificada de pre-commit para desarrollo ágil
+repos:
+  # Hooks generales
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-yaml
+      - id: check-json
+      - id: check-ast
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+
+  # Formateo con Black
+  - repo: https://github.com/psf/black
+    rev: 26.1.0
+    hooks:
+      - id: black
+        language_version: python3.12
+        args: ['--line-length=100']
+
+  # Ordenamiento de imports con isort
+  - repo: https://github.com/PyCQA/isort
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Linting con flake8 (configuración relajada para desarrollo)
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        args: [
+          '--max-line-length=100',
+          '--extend-ignore=E203,E501,W503,F401,F841,C901',  # Ignora imports sin usar, vars sin usar, complejidad
+          '--max-complexity=20',  # Complejidad más permisiva
+          '--exclude=docs,.venv,__pycache__,.git'
+        ]
+
+  # Detecta secretos (con baseline)
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # Tests rápidos antes de commit (solo no-lentos)
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: bash -c 'pytest -v --tb=short -m "not slow" || true'  # No bloquea el commit
+        language: system
+        pass_filenames: false
+        always_run: false  # Solo cuando hay cambios en tests
+        stages: [pre-commit]

@@ -1,8 +1,5 @@
-from core.exceptions.checkpoint.checkpoint_error import CheckpointError
+from .checkpoint_error import CheckpointError
 
 
-class CheckpointNotFoundError(CheckpointError()):
-    """No se encontro el checkpoint """
-    pass
-
-
+class CheckpointNotFoundError(CheckpointError):
+    """No se encontro el checkpoint"""

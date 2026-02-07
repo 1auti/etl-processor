@@ -3,12 +3,13 @@ Configuración del sistema de análisis de tráfico web.
 """
 
 import os
-from dotenv import load_dotenv
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 # Cargar variables de entorno
 load_dotenv()
+
 
 class Config:
     """
@@ -32,7 +33,7 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     LOG_FORMAT = os.getenv("LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     LOG_DATEFMT = os.getenv("LOG_DATEFMT", "%Y-%m-%d %H:%M:%S")
-    LOG_DIR = Path('logs')
+    LOG_DIR = Path("logs")
 
     @classmethod
     def get_db_connection_string(cls):
@@ -43,11 +44,11 @@ class Config:
             dict: Diccionario con parámetros de conexión
         """
         return {
-            'host': cls.DB_HOST,
-            'port': cls.DB_PORT,
-            'database': cls.DB_NAME,
-            'user': cls.DB_USER,
-            'password': cls.DB_PASSWORD
+            "host": cls.DB_HOST,
+            "port": cls.DB_PORT,
+            "database": cls.DB_NAME,
+            "user": cls.DB_USER,
+            "password": cls.DB_PASSWORD,
         }
 
     @classmethod
@@ -75,5 +76,3 @@ if __name__ != "__main__":
         Config.validate()
     except ValueError as e:
         print(f" Error de configuración: {e}")
-
-

@@ -1,8 +1,5 @@
+from src.core.exceptions.etl_exception import EtlException
 
-from core.exceptions.etl_exception import EtlException
 
-
-class FileError(EtlException()):
+class FileError(EtlException):
     """Error relacionado con operaciones de archivos."""
-    pass
-

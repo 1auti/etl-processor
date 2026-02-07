@@ -10,7 +10,7 @@ def async_retry(
     delay: float = 1.0,
     backoff: float = 2.0,
     exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Optional[Callable[[int, Exception, float], None]] = None
+    on_retry: Optional[Callable[[int, Exception, float], None]] = None,
 ):
     """
     Decorador de reintentos para funciones asíncronas.
@@ -25,6 +25,7 @@ def async_retry(
     Returns:
         Decorador para funciones async
     """
+
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
@@ -63,4 +64,5 @@ def async_retry(
             raise RuntimeError("Lógica de reintentos falló")
 
         return wrapper
+
     return decorator

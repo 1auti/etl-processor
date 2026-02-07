@@ -1,5 +1,3 @@
-
-
 """
 Sistema de configuración centralizado con soporte para múltiples ambientes.
 Carga configuración desde YAML y permite override con variables de entorno.
@@ -7,15 +5,12 @@ Carga configuración desde YAML y permite override con variables de entorno.
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
+
 import yaml
 from dotenv import load_dotenv
 
-from src.core.exceptions import (
-    ConfigurationError,
-    InvalidConfigError,
-    MissingConfigError
-)
+from src.core.exceptions import ConfigurationError, MissingConfigError
 
 
 class Config:
@@ -39,21 +34,15 @@ class Config:
         load_dotenv()
 
         # Determinar ambiente
-        self.env = env or os.getenv('ETL_ENV', 'dev')
+        self.env = env or os.getenv("ETL_ENV", "dev")
 
         # Directorio de configuración
         if config_dir is None:
-            # Buscar carpeta config desde la raíz del proyecto
-            current = Path(__file__).parent
-            while current.parent != current:
-                config_dir = current / 'config'
-                if config_dir.exists():
-                    break
-                current = current.parent
-            else:
-                config_dir = Path('config')
+            config_dir = Path("src/config")
+        elif isinstance(config_dir, str):
+            config_dir = Path(config_dir)
 
-        self.config_dir = Path(config_dir)
+        self.config_dir = config_dir.resolve()  # Convertimos en ruta absoluta
 
         # Configuración cargada
         self._config: Dict[str, Any] = {}
@@ -66,21 +55,20 @@ class Config:
 
     def _load_config(self):
         """Carga configuración desde archivo YAML."""
-        config_file = self.config_dir / f"{self.env}.yaml"
+        config_file = self.config_dir / f"{self.env}.yml"
 
         if not config_file.exists():
             raise ConfigurationError(
                 f"Config file not found: {config_file}",
-                {"env": self.env, "config_dir": str(self.config_dir)}
+                {"env": self.env, "config_dir": str(self.config_dir)},
             )
 
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, "r") as f:
                 self._config = yaml.safe_load(f) or {}
         except yaml.YAMLError as e:
             raise ConfigurationError(
-                f"Failed to parse config file: {config_file}",
-                {"error": str(e)}
+                f"Failed to parse config file: {config_file}", {"error": str(e)}
             )
 
         # Override con variables de entorno
@@ -95,12 +83,12 @@ class Config:
             ETL_DATABASE_HOST=localhost → config['database']['host'] = 'localhost'
         """
         for key, value in os.environ.items():
-            if key.startswith('ETL_'):
+            if key.startswith("ETL_"):
                 # Remover prefijo y convertir a lowercase
                 config_key = key[4:].lower()
 
                 # Separar por _ para nested keys
-                keys = config_key.split('_')
+                keys = config_key.split("_")
 
                 # Navegar nested dict
                 current = self._config
@@ -115,9 +103,9 @@ class Config:
     def _convert_type(self, value: str) -> Any:
         """Convierte string a tipo apropiado."""
         # Boolean
-        if value.lower() in ('true', 'yes', '1'):
+        if value.lower() in ("true", "yes", "1"):
             return True
-        if value.lower() in ('false', 'no', '0'):
+        if value.lower() in ("false", "no", "0"):
             return False
 
         # Integer
@@ -138,12 +126,12 @@ class Config:
     def _validate_required_fields(self):
         """Valida que todos los campos requeridos estén presentes."""
         required_fields = [
-            'database.host',
-            'database.port',
-            'database.name',
-            'database.user',
-            'processing.batch_size',
-            'logging.level',
+            "database.host",
+            "database.port",
+            "database.name",
+            "database.user",
+            "processing.batch_size",
+            "logging.level",
         ]
 
         missing_fields = []
@@ -156,8 +144,7 @@ class Config:
 
         if missing_fields:
             raise MissingConfigError(
-                "Missing required configuration fields",
-                {"missing_fields": missing_fields}
+                "Missing required configuration fields", {"missing_fields": missing_fields}
             )
 
     def get(self, key: str, default: Any = None) -> Any:
@@ -181,7 +168,7 @@ class Config:
             >>> config.get('database.timeout', 30)
             30
         """
-        keys = key.split('.')
+        keys = key.split(".")
         value = self._config
 
         try:
@@ -192,8 +179,7 @@ class Config:
             if default is not None:
                 return default
             raise MissingConfigError(
-                f"Configuration key not found: {key}",
-                {"key": key, "env": self.env}
+                f"Configuration key not found: {key}", {"key": key, "env": self.env}
             )
 
     def __getitem__(self, key: str) -> Any:
@@ -218,13 +204,10 @@ class Config:
         Returns:
             str: URL en formato postgresql://user:pass@host:port/database
         """
-        db = self.get('database')
-        password = db.get('password', '')
+        db = self.get("database")
+        password = db.get("password", "")
 
-        return (
-            f"postgresql://{db['user']}:{password}@"
-            f"{db['host']}:{db['port']}/{db['name']}"
-        )
+        return f"postgresql://{db['user']}:{password}@" f"{db['host']}:{db['port']}/{db['name']}"
 
     def get_database_params(self) -> Dict[str, Any]:
         """
@@ -233,11 +216,11 @@ class Config:
         Returns:
             dict: Parámetros de conexión
         """
-        db = self.get('database')
+        db = self.get("database")
         return {
-            'host': db['host'],
-            'port': db['port'],
-            'database': db['name'],
-            'user': db['user'],
-            'password': db.get('password', ''),
+            "host": db["host"],
+            "port": db["port"],
+            "database": db["name"],
+            "user": db["user"],
+            "password": db.get("password", ""),
         }

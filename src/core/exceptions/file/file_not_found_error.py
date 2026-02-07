@@ -1,0 +1,5 @@
+from src.core.exceptions.file.file_error import FileError
+
+
+class FileNotFoundExcepction(FileError):
+    """El archivo no se encontro"""

@@ -4,11 +4,9 @@ La carpeta `utils/` contiene **utilidades y helpers** reutilizables para tod
 src/core/utils/
 ├── __init__.py              # Exporta todas las utilidades
 ├── retry_decorators.py      # Decoradores para reintentos automáticos
-├── async_retry.py     
+├── async_retry.py
 ├── retry_contexts.py          # Validación de datos y configuraciones
 ├── retry_contexts_database      # Context managers personalizados
 ├── retry_advanced        # Utilidades para métricas y estadísticas
 
 ```
-
-
